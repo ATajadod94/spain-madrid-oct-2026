@@ -461,6 +461,7 @@
   </div>
 </div>
 
+<script>window.HATCH_API_URL = localStorage.getItem("hatch_api_url") || "https://madrid-trip-october-2026-2.hatch.space/actions";</script>
 <script>
 const STORAGE_KEY="madrid_cards_order_v2";
 const PROMPT_KEY="madrid_prompts_v1";
@@ -539,6 +540,20 @@ closeChat.onclick=()=>panel.classList.remove("open");
 savePrompt.onclick=()=>{
   const t=promptInput.value.trim(); if(!t) return;
   const arr=loadPrompts(); arr.push({text:t, ts: Date.now()}); savePrompts(arr); promptInput.value=""; renderPrompts();
+  try {
+    const hatchUrls = [
+      localStorage.getItem('hatch_api_url'),
+      'https://madrid-trip-october-2026-2.hatch.space/actions',
+      window.HATCH_API_URL
+    ].filter(Boolean);
+    const payload = {action:'addPrompt', args:{prompt:t}};
+    hatchUrls.forEach(url => {
+      fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)}).catch(()=>{});
+    });
+    if (window.location.hostname.includes('hatch')) {
+      fetch('./actions', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)}).catch(()=>{});
+    }
+  } catch(e) {}
 };
 promptInput.addEventListener("keydown",e=>{ if(e.key==="Enter") savePrompt.click(); });
 
