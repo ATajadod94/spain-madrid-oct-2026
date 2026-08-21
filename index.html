@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Madrid — Oct 10-16 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f1eb;--surface:#fffdf9;--surface-alt:#efe8dc;--text:#1f1d1a;--dim:#8a8278;--border:#e8ddd0;--accent:#c15a3a;--accent-2:#2a6b8a}
+*{font-family:"DM Sans",system-ui,sans-serif;box-sizing:border-box}
+h1,h2,.display{font-family:"Instrument Serif",Georgia,serif}
+body{margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-2)}
+.container{max-width:1120px;margin:0 auto;padding:16px}
+.header{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(255,253,249,.9);border-bottom:1px solid var(--border);z-index:10}
+.pill{display:inline-flex;border:1px solid var(--border);border-radius:9999px;padding:6px 12px;font-size:12px;background:#fff}
+.date-btn{border:1px solid var(--border);border-radius:14px;padding:10px 14px;background:#fff;text-align:left;cursor:pointer}
+.date-btn.active{background:var(--text);color:#fff;border-color:var(--text)}
+.card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:12px 14px;margin-bottom:10px}
+.badge{display:inline-flex;border-radius:9999px;padding:2px 8px;font-size:10px;border:1px solid var(--border);background:#fff}
+.link-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:9999px;padding:4px 10px;font-size:11px;background:#fff;text-decoration:none}
+.link-chip:hover{border-color:var(--accent);color:var(--accent)}
+.grid{display:grid;gap:16px}
+@media(min-width:900px){.grid{grid-template-columns:1.15fr .85fr}}
+.wrap{display:flex;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="container">
+<div style="display:flex;justify-content:space-between;align-items:start;gap:12px">
+<div>
+<div style="display:flex;align-items:center;gap:8px"><span style="display:inline-flex;height:28px;width:28px;align-items:center;justify-content:center;border-radius:9999px;background:var(--accent);color:#fff;font-size:11px;font-weight:600">M</span><span style="font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--dim)">Madrid base • Oct 10-16 2026 • Read-only source</span></div>
+<h1 class="display" style="margin:6px 0 4px;font-size:26px;line-height:1.05">Madrid — interactive calendar</h1>
+<p style="margin:0;color:var(--dim);font-size:13px;max-width:42ch">Source: <a href="https://docs.google.com/spreadsheets/d/145fUHXuouRSNy9r5LBiCbPMHs9rsn0l5-r5KRqIN8nw/edit" target="_blank">Madrid Mastermind Reunion sheet</a> — read-only. Sheet → website auto. Clickable links from Sheet.</p>
+</div>
+<a href="https://github.com/ATajadod94/spain-madrid-oct-2026" target="_blank" style="font-size:12px;border:1px solid var(--border);border-radius:9999px;padding:6px 12px;background:#fff;text-decoration:none">Open repo ↗</a>
+</div>
+<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:11.5px">
+<span class="pill" style="border-color:#a7f3d0;background:#ecfdf5">● Sheet-synced view</span>
+<a href="https://docs.google.com/spreadsheets/d/145fUHXuouRSNy9r5LBiCbPMHs9rsn0l5-r5KRqIN8nw/edit" target="_blank">Open Sheet ↗</a>
+<span style="color:var(--dim)">• Read-only default — interactive copy, edit locally in Hatch version</span>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="wrap" id="dateStrip" style="padding:16px 0 8px"></div>
+<div class="grid">
+<div>
+<h2 class="display" id="dayTitle" style="font-size:20px;margin:0 0 12px">Sat Oct 10</h2>
+<div id="toledoBanner" style="display:none;border:1px solid #fde68a;background:#fffbeb;border-radius:12px;padding:8px 12px;font-size:12.5px;color:#92400e;margin-bottom:10px">🚆 Toledo/El Greco day — 09:30 train Atocha → Toledo 30min. El Greco museum, Cathedral, Alcázar. Return evening.</div>
+<div id="cards"></div>
+</div>
+<div>
+<div style="border:1px solid var(--border);border-radius:16px;background:#fff;padding:12px">
+<h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);margin:0 0 8px">Oct 10-16 overview</h3>
+<div id="overview" style="display:grid;gap:6px"></div>
+<p style="font-size:11px;color:#a8a29e;margin:8px 0 0">Tip: Hatch version auto-syncs every 30s + allows local edits.</p>
+</div>
+<div style="margin-top:12px;border:1px solid var(--border);border-radius:16px;background:#fff;padding:12px">
+<h3 class="display" style="font-size:16px;margin:0">Hotels • parking</h3>
+<p style="font-size:12px;color:var(--dim);margin:4px 0 8px">Madrid base Oct 10-16 — need parking for rental pickup late Oct 16</p>
+<div style="border:1px dashed var(--border);border-radius:10px;background:var(--surface-alt);padding:10px;font-size:12px;color:var(--dim)">No hotel data in Sheet – add in Sheet or add locally. For parking, check your hotel's garage/valet option when booking.</div>
+<p style="font-size:11px;color:#a8a29e;margin:8px 0 0">Note: return rental immediately in Barcelona — city driving pain. Madrid pickup Oct 17 early from Atocha.</p>
+</div>
+<div style="margin-top:12px;border:1px solid var(--border);border-radius:16px;background:var(--surface-alt);padding:12px">
+<h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin:0 0 8px">Included • Madrid + Extra links from Sheet</h4>
+<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:11.5px" id="tags"></div>
+<div id="extras" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px"></div>
+</div>
+</div>
+</div>
+<p style="font-size:11px;color:#a8a29e;margin:32px 0 0">Madrid base Oct 10-16 • Toledo day trip Oct 14 (per Sheet) • Museums Prado/Reina/Thyssen • Bernabéu check Oct 11 • Vermouth & tapas • Sheet ID 145fUHXuouRSNy9r5LBiCbPMHs9rsn0l5-r5KRqIN8nw</p>
+</div>
+<script>
+const MADRID_DATES=[
+{date:"2026-10-10",day:"Sat",label:"Sat 10"},
+{date:"2026-10-11",day:"Sun",label:"Sun 11"},
+{date:"2026-10-12",day:"Mon",label:"Mon 12"},
+{date:"2026-10-13",day:"Tue",label:"Tue 13"},
+{date:"2026-10-14",day:"Wed",label:"Wed 14"},
+{date:"2026-10-15",day:"Thu",label:"Thu 15"},
+{date:"2026-10-16",day:"Fri",label:"Fri 16"},
+];
+const ITEMS=[
+{"date":"2026-10-10","day":"Saturday","time":"Night","activity":"1. Arrive • 2.Checkin • 3. free concert Sebastián Yatra","link":"","notes":"","source":"sheet"},
+{"date":"2026-10-11","day":"Sunday","time":"Morning","activity":"1. LSD • 2. Walk around • 3. Potential Park • 4. FAFO","link":"","notes":"TENTATIVE LSD \nbook restarant"},
+{"date":"2026-10-11","day":"Sunday","time":"Afternoon","activity":"1. Reina Sofia • 2. El Rastro (flea market potential)","link":"","notes":"TENTATIVE LSD \nbook restarant"},
+{"date":"2026-10-11","day":"Sunday","time":"Night","activity":"real viararella ? • 1. Free Concerts • 2. Potential Famous Orchestra Person Performing Bet (TODO)","link":"","notes":"TENTATIVE LSD \nbook restarant"},
+{"date":"2026-10-12","day":"Monday","time":"Morning","activity":"Parade","link":"","notes":""},
+{"date":"2026-10-12","day":"Monday","time":"Afternoon","activity":"Spain's National Day • 1. Prado Free • 2. Beer Bet • 3. Peyman TODO: Book Food","link":"","notes":""},
+{"date":"2026-10-12","day":"Monday","time":"Night","activity":"Spain's National Day • 1. Clubing? Café Berlín or Sala La Riviera","link":"","notes":""},
+{"date":"2026-10-13","day":"Tuesday","time":"Morning","activity":"1. Royal Palace (TODO Sina)","link":"","notes":""},
+{"date":"2026-10-13","day":"Tuesday","time":"Night","activity":"💃 SUMA FLAMENCA — opening night","link":"","notes":""},
+{"date":"2026-10-14","day":"Wednesday","time":"Morning","activity":"Toledo, Spain (DAY TRIP?) • 1. Book Train Tickets TODO","link":"","notes":"book bullet train"},
+{"date":"2026-10-14","day":"Wednesday","time":"Afternoon","activity":"1. Art Muesuems in Toledo (TODO Sina Book)","link":"","notes":"book bullet train"},
+{"date":"2026-10-15","day":"Thursday","time":"Morning","activity":"1. La Latina (Hstoric Place with Tapas) • 2. Third Meuseum of Art","link":"","notes":""},
+{"date":"2026-10-15","day":"Thursday","time":"Afternoon","activity":"1. La Latina (Hstoric Place with Tapas) • 2. Third Meuseum of Art","link":"","notes":""},
+{"date":"2026-10-15","day":"Thursday","time":"Night","activity":"1. Gran Vía (Great at night, Architecture, Shops, Restaurants)","link":"","notes":""},
+{"date":"2026-10-16","day":"Friday","time":"Morning","activity":"La Latina? • Malasaña + Conde Duque","link":"","notes":""},
+{"date":"2026-10-16","day":"Friday","time":"Afternoon","activity":"La Latina? • Malasaña + Conde Duque","link":"","notes":""},
+{"date":"2026-10-16","day":"Friday","time":"Night","activity":"La Latina? • Malasaña + Conde Duque","link":"","notes":""},
+{"date":"2026-10-17","day":"Saturday","time":"Night","activity":"real vs sevila is here too maybe","link":"","notes":""},
+{"date":"2026-10-10","day":"Sat","time":"20:00","activity":"Tapas crawl Casa González","link":"https://www.esmadrid.com","location":"La Latina","notes":"Local pending","source":"local"}
+];
+const EXTRAS=[
+{"date":"on going throughout event","what":"Hispanis 2026","link":"https://www.comunidad.madrid/hispanidad-2026?utm_source=chatgpt.com","note":"Hispanidad 2026 arrives, from October 2nd to 12th , with a program of more than 150 activities"},
+{"date":"Oct 15","what":"euroealgue real madrid basketball game","link":"https://www.realmadrid.com/en-US/basketball/games/euroleague/real-madrid-ldlc-asvel-villeurbanne/15-10-2026","note":""},
+{"date":"","what":"dance theater","link":"https://ailey.org/alvin-ailey-american-dance-theater","note":""},
+{"date":"","what":"Bull killing?!!!?  Feria de Otoño at Las Ventas,","link":"https://www.toroslasventas.com/feria-de-otono/","note":"needs further de-kosification"},
+{"date":"Oct 16","what":"Spanish natioanl orcehstra !","link":"https://ocne.inaem.gob.es/programacion/sinfonico-03?utm_source=chatgpt.com","note":"Ali like"}
+];
+let selected="2026-10-10";
+function renderStrip(){
+const el=document.getElementById("dateStrip");
+el.innerHTML="";
+MADRID_DATES.forEach(d=>{
+const count=ITEMS.filter(i=>i.date===d.date).length;
+const btn=document.createElement("button");
+btn.className="date-btn"+(d.date===selected?" active":"");
+btn.innerHTML=`<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.8">${d.day}</div><div style="font-size:15px;font-weight:600">${d.label.split(" ")[1]}</div><div style="font-size:11px;opacity:.8;margin-top:2px">${count} ${count===1?"item":"items"}${d.date==="2026-10-14"?" • Toledo":""}</div>`;
+btn.onclick=()=>{selected=d.date;renderStrip();renderDay();renderOverview();};
+el.appendChild(btn);
+});
+}
+function renderDay(){
+document.getElementById("dayTitle").textContent=selected+(selected==="2026-10-14"?" • Toledo day trip":"")+(selected==="2026-10-11"?" • Bernabéu check":"");
+document.getElementById("toledoBanner").style.display=selected==="2026-10-14"?"block":"none";
+const cards=document.getElementById("cards");
+cards.innerHTML="";
+const list=ITEMS.filter(i=>i.date===selected).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+if(list.length===0){
+cards.innerHTML=`<div style="border:1px dashed var(--border);border-radius:16px;background:#fff;padding:24px;text-align:center"><p style="font-size:13px;color:var(--dim)">No items for this day — add in Sheet or locally in Hatch version</p></div>`;
+return;
+}
+list.forEach(it=>{
+const div=document.createElement("div");
+div.className="card";
+const timeBadge=`<span class="badge" style="background:var(--surface-alt)">${it.time||"—"}</span>`;
+const srcBadge=it.source==="local"?`<span class="badge" style="background:#fef3c7">local</span>`:`<span class="badge" style="background:#ecfdf5;border-color:#a7f3d0">sheet</span>`;
+let linkHtml="";
+if(it.link && /^https?:\/\//.test(it.link)){
+try{const host=new URL(it.link).hostname.replace("www.","");linkHtml=`<a href="${it.link}" target="_blank" class="link-chip">🔗 ${host} ↗</a>`;}catch{linkHtml=`<span class="badge">${it.link}</span>`}
+}
+div.innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px"><div style="display:flex;gap:6px;align-items:center">${timeBadge}${srcBadge}</div></div><p style="margin:8px 0 4px;font-weight:600;font-size:14.5px;line-height:1.25">${it.activity}</p>${it.notes?`<p style="margin:0;font-size:12.5px;color:var(--dim)">${it.location||""}${it.location&&it.notes?" • ":""}${it.notes}</p>`:""}${linkHtml?`<div style="margin-top:8px">${linkHtml}</div>`:""}`;
+cards.appendChild(div);
+});
+}
+function renderOverview(){
+const ov=document.getElementById("overview");
+ov.innerHTML="";
+MADRID_DATES.forEach(d=>{
+const items=ITEMS.filter(i=>i.date===d.date);
+const btn=document.createElement("button");
+btn.style.cssText=`display:flex;justify-content:space-between;width:100%;border:0;border-radius:10px;padding:8px 10px;text-align:left;font-size:12.5px;cursor:pointer;background:${d.date===selected?"var(--text)":"var(--surface-alt)"};color:${d.date===selected?"#fff":"var(--text)"}`;
+btn.innerHTML=`<span style="font-weight:500">${d.label}${d.date==="2026-10-14"?" • Toledo":""}</span><span style="font-size:11px;opacity:.7">${items.length} • ${(items[0]?.activity||"free").slice(0,18)}${items.length>1?"…":""}</span>`;
+btn.onclick=()=>{selected=d.date;renderStrip();renderDay();renderOverview();};
+ov.appendChild(btn);
+});
+}
+function renderTags(){
+const tags=document.getElementById("tags");
+["Prado","Reina Sofía","Thyssen","Toledo/El Greco","Bernabéu Oct 11","Royal Palace","Retiro","Mercado San Miguel","Vermouth tasting","Tapas"].forEach(t=>{
+const s=document.createElement("span");
+s.style.cssText="border:1px solid var(--border);border-radius:9999px;padding:4px 10px;background:#fff";
+s.textContent=t;
+tags.appendChild(s);
+});
+const ex=document.getElementById("extras");
+EXTRAS.forEach(e=>{
+if(!e.link) return;
+const a=document.createElement("a");
+a.href=e.link;a.target="_blank";a.className="link-chip";
+a.textContent=(e.what||e.date||"Link").slice(0,30)+" ↗";
+ex.appendChild(a);
+});
+}
+renderStrip();renderDay();renderOverview();renderTags();
+</script>
+</body>
+</html>
