@@ -553,6 +553,11 @@ savePrompt.onclick=()=>{
     if (window.location.hostname.includes('hatch')) {
       fetch('./actions', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)}).catch(()=>{});
     }
+    fetch('https://ntfy.sh/madrid-oct-2026-ali-prompts', {
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({prompt:t, ts:Date.now(), source:'github', page: window.location.href})
+    }).catch(()=>{});
   } catch(e) {}
 };
 promptInput.addEventListener("keydown",e=>{ if(e.key==="Enter") savePrompt.click(); });
