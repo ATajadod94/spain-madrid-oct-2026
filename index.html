@@ -943,20 +943,34 @@
 <script>
 const ACTIONS_URL="https://madrid-trip-october-2026-2.hatch.space/actions";
 const VOTER_KEY="madrid_voter_id_v1";
+const FALLBACK_KEY="madrid_votes_fallback_v2";
 function getVoter(){
   try{let id=localStorage.getItem(VOTER_KEY); if(id&&id.length>=8) return id; id='v_'+Math.random().toString(36).slice(2,10)+'_'+Date.now().toString(36); localStorage.setItem(VOTER_KEY,id); return id;}catch{} return 'v_'+Math.random().toString(36).slice(2,10);
 }
-function toast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2500);}
+function toast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2800);}
+function loadFallback(){
+  try{ const raw=localStorage.getItem(FALLBACK_KEY); if(!raw) return {}; return JSON.parse(raw)||{}; }catch{ return {}; }
+}
+function saveFallback(map){ try{ localStorage.setItem(FALLBACK_KEY, JSON.stringify(map)); }catch{} }
 async function voteBar(barId,type,btn){
   const voterId=getVoter();
   btn.disabled=true;
+  const card=document.querySelector(`[data-bar-id="${barId}"]`);
+  // optimistic local update helper
+  function applyLocal(up,down,userVote){
+    if(!card) return;
+    const upEl=card.querySelector('.vote-btn.up .vc'); const downEl=card.querySelector('.vote-btn.down .vc');
+    if(upEl) upEl.textContent=up; if(downEl) downEl.textContent=down;
+    card.querySelectorAll('.vote-btn').forEach(b=>b.classList.remove('active'));
+    if(userVote==='up') card.querySelector('.vote-btn.up')?.classList.add('active');
+    if(userVote==='down') card.querySelector('.vote-btn.down')?.classList.add('active');
+  }
+  // try Hatch first
   try{
     const res=await fetch(ACTIONS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'voteBar',args:{barId,type,voterId}}),mode:'cors'});
     if(!res.ok) throw new Error('vote failed '+res.status);
     const data=await res.json();
     const result=data.result||data;
-    // update counts in card
-    const card=document.querySelector(`[data-bar-id="{}"]`.replace('{}',barId));
     if(card){ 
       const upBtn=card.querySelector('.vote-btn.up .vc'); const downBtn=card.querySelector('.vote-btn.down .vc');
       if(upBtn) upBtn.textContent=result.up??0; if(downBtn) downBtn.textContent=result.down??0;
@@ -964,8 +978,38 @@ async function voteBar(barId,type,btn){
       if(result.userVote==='up') card.querySelector('.vote-btn.up')?.classList.add('active');
       if(result.userVote==='down') card.querySelector('.vote-btn.down')?.classList.add('active');
     }
+    // also sync fallback so local stays in sync
+    try{
+      const fb=loadFallback(); fb[barId]={up:result.up,down:result.down,userVote:result.userVote}; saveFallback(fb);
+    }catch{}
     toast(result.message|| (type==='up'?'👍 counted':'👎 counted'));
-  }catch(e){toast('Vote failed - try again'); console.error(e);}finally{btn.disabled=false;}
+    return;
+  }catch(e){
+    console.warn('Hatch unreachable, using local fallback', e);
+    // fallback localStorage voting
+    const fb=loadFallback();
+    const cur=fb[barId]||{up:0,down:0,userVote:null};
+    // if server counts existed in DOM, use them as base if cur is empty
+    if(cur.up===0 && cur.down===0 && card){
+      const upDom=parseInt(card.querySelector('.vote-btn.up .vc')?.textContent||'0',10)||0;
+      const downDom=parseInt(card.querySelector('.vote-btn.down .vc')?.textContent||'0',10)||0;
+      if(upDom||downDom){ cur.up=upDom; cur.down=downDom; }
+    }
+    if(cur.userVote===type){
+      toast('Already voted 👍'===type?'👍 already counted':'👎 already counted');
+      btn.disabled=false;
+      return;
+    }
+    if(cur.userVote==='up' && type==='down'){ cur.up=Math.max(0,cur.up-1); cur.down+=1; }
+    else if(cur.userVote==='down' && type==='up'){ cur.down=Math.max(0,cur.down-1); cur.up+=1; }
+    else if(type==='up'){ cur.up+=1; }
+    else { cur.down+=1; }
+    cur.userVote=type;
+    fb[barId]=cur;
+    saveFallback(fb);
+    applyLocal(cur.up,cur.down,cur.userVote);
+    toast((type==='up'?'👍 counted (local)':'👎 counted (local)')+' – Hatch offline');
+  }finally{btn.disabled=false;}
 }
 // tabs
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
@@ -998,12 +1042,26 @@ document.querySelectorAll('#it-filters .chip').forEach(c=>c.addEventListener('cl
     const st=card.dataset.status||''; card.style.display=(f==='All'||st===f)?'block':'none';
   });
 }));
-// restore votes highlight on load
-(async()=>{try{
-  const voterId=getVoter(); const r=await fetch(ACTIONS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'getBarVotes',args:{voterId}}),mode:'cors'});
-  const d=await r.json(); const votes=(d.result||d).votes||[];
-  votes.forEach(v=>{const card=document.querySelector(`[data-bar-id="${v.barId}"]`); if(!card) return; if(v.userVote==='up') card.querySelector('.vote-btn.up')?.classList.add('active'); if(v.userVote==='down') card.querySelector('.vote-btn.down')?.classList.add('active'); const up=card.querySelector('.vote-btn.up .vc'); const down=card.querySelector('.vote-btn.down .vc'); if(up) up.textContent=v.up; if(down) down.textContent=v.down;});
-}catch(e){}})();
+// restore votes highlight on load - try Hatch then fallback
+(async()=>{
+  const fb=loadFallback();
+  // apply fallback first for instant UI
+  Object.keys(fb).forEach(k=>{
+    const v=fb[k]; const card=document.querySelector(`[data-bar-id="${k}"]`); if(!card) return;
+    const up=card.querySelector('.vote-btn.up .vc'); const down=card.querySelector('.vote-btn.down .vc');
+    if(up) up.textContent=v.up; if(down) down.textContent=v.down;
+    if(v.userVote==='up') card.querySelector('.vote-btn.up')?.classList.add('active');
+    if(v.userVote==='down') card.querySelector('.vote-btn.down')?.classList.add('active');
+  });
+  try{
+    const voterId=getVoter(); const r=await fetch(ACTIONS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'getBarVotes',args:{voterId}}),mode:'cors'});
+    if(!r.ok) throw new Error('get votes failed');
+    const d=await r.json(); const votes=(d.result||d).votes||[];
+    votes.forEach(v=>{const card=document.querySelector(`[data-bar-id="${v.barId}"]`); if(!card) return; if(v.userVote==='up') card.querySelector('.vote-btn.up')?.classList.add('active'); if(v.userVote==='down') card.querySelector('.vote-btn.down')?.classList.add('active'); const up=card.querySelector('.vote-btn.up .vc'); const down=card.querySelector('.vote-btn.down .vc'); if(up) up.textContent=v.up; if(down) down.textContent=v.down; // sync fallback
+      fb[v.barId]={up:v.up,down:v.down,userVote:v.userVote}; });
+    saveFallback(fb);
+  }catch(e){ console.warn('Hatch getBarVotes unreachable, using local only', e); }
+})();
 </script>
 </body>
 </html>
