@@ -14,522 +14,996 @@
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0} .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12px;cursor:pointer} .chip.active{background:#111;color:#fff}
 .search{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);font-size:14px;margin:8px 0}
 .card{background:var(--card);border:1px solid var(--border);border-left-width:4px;border-radius:12px;padding:12px;margin:10px 0;box-shadow:0 1px 0 rgba(0,0,0,0.02)}
-.card h3{margin:0 0 4px;font-size:15px} .meta{font-size:12px;color:var(--muted)} .tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0} .tag{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid var(--border);background:#fafafa}
-.btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px} .btn{font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:#fff;text-decoration:none;color:var(--ink);display:inline-block} .btn.primary{background:#111;color:#fff;border-color:#111}
-.why{font-size:13px;margin-top:6px} .badge{display:inline-block;font-size:11px;padding:2px 6px;border-radius:6px;border:1px solid var(--border);margin-left:6px}
-.res-walk{background:#dcfce7;border-color:#bbf7d0;color:#065f46} .res-need{background:#fef3c7;border-color:#fde68a;color:#92400e}
+.card h3{margin:0 0 4px;font-size:15px} .meta{font-size:12px;color:var(--muted)} .tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0} .tag{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid var(--border);background:#fff}
+.why{font-size:13px;margin:6px 0} .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px} .links a{font-size:12px;color:#2563eb;text-decoration:none} .links a:hover{text-decoration:underline}
+.res-badge{font-size:11px;padding:2px 6px;border-radius:6px;border:1px solid var(--border)} .res-badge.walk{background:#dcfce7;border-color:#16a34a} .res-badge.need{background:#fef3c7;border-color:#d97706}
+.badge{font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid var(--border)} .date{font-size:11px;color:var(--muted);margin-left:6px}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px} .vote-row{display:flex;gap:6px;flex-shrink:0} .vote-btn{padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12px;cursor:pointer} .vote-btn.active.up{background:#dcfce7;border-color:#16a34a} .vote-btn.active.down{background:#ffedd5;border-color:#ea580c} .vote-btn:disabled{opacity:0.6}
+.it-head{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 14px;border-radius:999px;font-size:13px;display:none;z-index:100}
 </style>
 </head>
 <body>
 <div class="wrap">
-<div class="header"><h1>Madrid — Oct 10-17</h1><div class="sub">Smartrental Gran Vía • 36 bars well-researched + 34 itinerary cards</div></div>
-<div class="tabs"><button class="tab active" data-tab="bars">Bars (36)</button><button class="tab" data-tab="itinerary">Itinerary</button><button class="tab" data-tab="hotel">Hotel</button></div>
-
-<div id="bars-pane">
-<div class="filters" id="vibe-filters"></div>
-<input id="bar-search" class="search" placeholder="Search bars, vibe, reservation, why special…"/>
-<div id="bars-list">
-<div class="card" style="border-left-color:#16a34a" data-vibes="Unique Cocktail,Speakeasy / Hidden,Good Vibes">
-      <h3>Salmon Guru <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle de Echegaray 21, Centro 28014, Madrid • Sun-Thu 4pm-2am, Fri-Sat 4pm-2:30am • ~12€ cocktails — 4.6/660 reviews</div>
-      <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> World's 50 Best Bars #23 in 2024. Maximalist comic-book chapel vibe — neon saints, irreverent menu Fruity to WTF?, signature La Mano de Dios. The one everyone talks about.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-ins welcome — no reservations. Max 6 people. Arrive early Fri/Sat. Highly recommended early 7-8pm.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Salmon+Guru+Calle+de+Echegaray+21+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://salmonguru.es" target="_blank">salmonguru.es — 4.6/660 reviews</a>
-        <a class="btn" href="https://www.google.com/search?q=Salmon+Guru+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
+  <div class="header"><h1>Madrid — Oct 10-17</h1><div class="sub">Smartrental Gran Vía • 36 bars well-researched + 34 itinerary cards • 👍👎 voting one per IP • 720px centered</div></div>
+  <div class="tabs"><button class="tab active" data-tab="bars">Bars (36)</button><button class="tab" data-tab="itinerary">Itinerary (34)</button><button class="tab" data-tab="hotel">Hotel</button></div>
+  <div id="pane-bars">
+    <div class="filters" id="bar-filters">
+      <button class="chip active" data-f="All">All</button>
+      <button class="chip" data-f="Unique Cocktail">Unique Cocktail</button>
+      <button class="chip" data-f="Rooftop">Rooftop</button>
+      <button class="chip" data-f="Speakeasy / Hidden">Speakeasy / Hidden</button>
+      <button class="chip" data-f="Late Night Dance">Late Night Dance</button>
+      <button class="chip" data-f="Good Vibes">Good Vibes</button>
+      <button class="chip" data-f="Vermouth">Vermouth</button>
+      <button class="chip" data-f="Classic Madrid">Classic Madrid</button>
     </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Unique Cocktail,Good Vibes / Vermouth,Classic Madrid">
-      <h3>Angelita Madrid <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle de la Reina 4, Chueca, Madrid • Mon-Fri 17:30-02:00/02:30 (bar). Dining closed Sat Sun • ~13-14€ cocktails — 4.5/608</div>
-      <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Good Vibes / Vermouth</span><span class="tag">Classic Madrid</span></div>
-      <div class="why"><b>Why:</b> Best cocktail bar in Spain FIBAR 2021, World's 50 Best #65 2024. No ice / no citrus sustainable cocktails, wine bar 2000+ bottles.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Bar area does NOT take bookings — walk-in only. Dining DOES via OpenTable — booking essential.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Angelita+Madrid+Calle+de+la+Reina+4" target="_blank">Maps</a>
-        <a class="btn" href="https://madrid-angelita.es" target="_blank">madrid-angelita.es — 4.5/608</a>
-        <a class="btn" href="https://www.google.com/search?q=Angelita+Madrid+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Unique Cocktail,Speakeasy / Hidden,Classic Madrid">
-      <h3>1862 Dry Bar <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle del Pez 27, Malasaña, Madrid • Daily 3:30pm-2am • ~12-14€ — 4.7/297, 4.6/1200 Google</div>
-      <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Classic Madrid</span></div>
-      <div class="why"><b>Why:</b> Classic speakeasy in 1862 palace. 150+ brands, pure classic cocktail focus.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-ins welcome — no reservations required. Small room, arrive early Fri/Sat.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=1862+Dry+Bar+Calle+del+Pez+27+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://1862drybar.com" target="_blank">1862drybar.com — 4.7/297</a>
-        <a class="btn" href="https://www.google.com/search?q=1862+Dry+Bar+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Unique Cocktail,Speakeasy / Hidden,Good Vibes">
-      <h3>Macera Taller Bar <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle de San Mateo 21, 28004 Madrid • Tue-Sun 7pm-2am • ~12-13€ — 4.8 rating</div>
-      <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> House-infused rums/gins, constantly evolving menu, industrial chic.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-ins welcome, reservations recommended Fri/Sat via website/IG.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Macera+Taller+Bar+Calle+de+San+Mateo+21+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://macera.es" target="_blank">macera.es — 4.8 highly rated</a>
-        <a class="btn" href="https://www.google.com/search?q=Macera+Taller+Bar+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Unique Cocktail,Speakeasy / Hidden,Good Vibes">
-      <h3>Inclán Brutal Bar <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle de Álvarez Gato 4, Barrio de las Letras, Madrid • Daily 7pm-2:30am • ~12€ — 4.7/19872</div>
-      <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Drinks served in mini bathtubs, skulls, bird cages. Avant-garde, theatrical.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-ins only — no reservation. Arrive early, gets busy after 11pm.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Inclan+Brutal+Bar+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://inclanbrutalbar.com" target="_blank">inclanbrutalbar.com — 4.7/19872</a>
-        <a class="btn" href="https://www.google.com/search?q=Inclán+Brutal+Bar+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Unique Cocktail,Classic Madrid,Good Vibes">
-      <h3>Del Diego Cocktail Bar <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle de la Reina 12, Chueca, Madrid • Mon-Thu 7pm-3am, Fri-Sat 7pm-3:30am, closed Sun • ~13€ cocktails</div>
-      <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Classic Madrid</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> NY-style since 1990, wood-paneled award-winning interior. Old-school classic.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-ins — no reservation. NY-style since 1990.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Del+Diego+Cocktail+Bar+Calle+de+la+Reina+12+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.esmadrid.com/en/nightlife/del-diego" target="_blank">esmadrid.com/del-diego</a>
-        <a class="btn" href="https://www.google.com/search?q=Del+Diego+Cocktail+Bar+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Late Night Dance,Good Vibes,Unique Cocktail">
-      <h3>Teatro Kapital <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle de Atocha 125, Madrid — 7 floors • 11pm-6am (Thu-Sat peak) • ~20-25€ entry incl. drinks — 4.44/7454</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
-      <div class="why"><b>Why:</b> Madrid's high temple of hedonism — 7 floors different music (R&B, salsa, house).</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Tickets via Fever / website. General admission +2 drinks before 1am 1 after. Dress code smart elegant. Phone +34 914202906.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Teatro+Kapital+Calle+de+Atocha+125+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://teatrokapital.com" target="_blank">teatrokapital.com — 4.44/7454</a>
-        <a class="btn" href="https://www.google.com/search?q=Teatro+Kapital+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Late Night Dance,Good Vibes">
-      <h3>Mondo Disko <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle de Hernán Cortés, Centro, Madrid • Fri-Sat 11:30pm-6am • ~12-20€ entry</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Small dark house/techno institution, local DJs, best sound system.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Tickets at door or via Dice / Resident Advisor. Usually €10-20 entry.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Mondo+Disko+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://mondodisko.es" target="_blank">mondodisko.es — techno institution</a>
-        <a class="btn" href="https://www.google.com/search?q=Mondo+Disko+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Late Night Dance,Good Vibes">
-      <h3>Marula Café <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle Caños Viejos 3, La Latina, Madrid • Daily 11pm-5am, live band early then DJs • ~10-12€ cocktails, free before 12am</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Funk / soul / disco, live band early then DJs. Friendly dance floor.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> No reservation — walk-in. Free before midnight usually.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Marula+Cafe+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.marulacafe.com" target="_blank">marulacafe.com — funk/soul</a>
-        <a class="btn" href="https://www.google.com/search?q=Marula+Café+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Late Night Dance,Good Vibes,Classic Madrid">
-      <h3>Café Berlín <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Costanilla de los Ángeles 20, Centro, Madrid • Tue-Sun 8pm-3am (live jazz 9pm-12am, club after) • ~10-15€ entry / cocktails — 4.4/14</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span><span class="tag">Classic Madrid</span></div>
-      <div class="why"><b>Why:</b> Live jazz / world music till midnight, then dance club. Best culture + late night combo.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Tickets for live shows via website. Otherwise walk-in.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Cafe+Berlin+Costanilla+de+los+Angeles+20+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://berlincafe.es" target="_blank">berlincafe.es — 4.4/14</a>
-        <a class="btn" href="https://www.google.com/search?q=Café+Berlín+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Late Night Dance,Good Vibes">
-      <h3>Planet Club <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle del Príncipe 20, Madrid (near Sol) • Sun-Thu 8pm-3am, Fri-Sat 8pm-3:30am • ~10€ entry incl. drink</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Neon-drenched, 365 days high-energy crowds. Right by Sol station.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> No reservation — walk-in. Neon 365 days. Cover ~€10 with drink.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Planet+Club+Calle+del+Principe+20+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.instagram.com/planetclubmadrid/" target="_blank">Instagram @planetclubmadrid</a>
-        <a class="btn" href="https://www.google.com/search?q=Planet+Club+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Unique Cocktail,Good Vibes">
-      <h3>Rosi La Loca <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle de Cádiz 4, Centro, Madrid • Daily 1pm-2am • ~13€ cocktails — 4.7/24095</div>
-      <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Gastropub, inventive cocktails in standout glassware. Maximalist decor.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations via website — recommended.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Rosi+La+Loca+Calle+de+Cadiz+4+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://rosilaloca.com" target="_blank">rosilaloca.com — 4.7/24095</a>
-        <a class="btn" href="https://www.google.com/search?q=Rosi+La+Loca+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#2563eb" data-vibes="Rooftop,Good Vibes">
-      <h3>Azotea del Círculo <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">C. del Marqués de Casa Riera 2, Centro — Círculo de Bellas Artes rooftop • Daily 10am-1am (rooftop sunset prime 8-11pm) • ~12-14€ cocktails — 4.2/10704</div>
-      <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> 360-degree skyline from Bellas Artes rooftop. Craft cocktails, live beats.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> No reservation for rooftop — entry €4-5 to building.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Azotea+del+Circulo+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://circulobellasartes.com/azotea/" target="_blank">circulobellasartes.com — 4.2/10704</a>
-        <a class="btn" href="https://www.google.com/search?q=Azotea+del+Círculo+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#2563eb" data-vibes="Rooftop,Good Vibes">
-      <h3>Azotea Cibeles <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Plaza Cibeles 1, 6th floor — Palacio de Cibeles • Daily 11am-1am • ~13€ cocktails — 4.1/9475</div>
-      <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Rooftop cocktails with Cibeles Palace view.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations recommended via website.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Azotea+Cibeles+Plaza+Cibeles+1+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://azoteacibeles.com" target="_blank">azoteacibeles.com — 4.1/9475</a>
-        <a class="btn" href="https://www.google.com/search?q=Azotea+Cibeles+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Speakeasy / Hidden,Unique Cocktail">
-      <h3>Bad Company 1920 <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle Miguel Moya 8, near Callao, Madrid • Tue-Sun 7pm-2:30am • ~13€ cocktails</div>
-      <div class="tags"><span class="tag">Speakeasy / Hidden</span><span class="tag">Unique Cocktail</span></div>
-      <div class="why"><b>Why:</b> 1920s speakeasy near Callao, cocktail-led. Hidden entrance.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations via website/IG. Hidden door.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Bad+Company+1920+Calle+Miguel+Moya+8+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://badcompany1920.com" target="_blank">badcompany1920.com — speakeasy</a>
-        <a class="btn" href="https://www.google.com/search?q=Bad+Company+1920+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Unique Cocktail,Speakeasy / Hidden">
-      <h3>Devil's Cut <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle del León 3, Centro, Madrid • Daily 6pm-2am • ~12€ cocktails</div>
-      <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span></div>
-      <div class="why"><b>Why:</b> 40-year-old bar rejuvenated — Japanese techniques + NY cocktail + sherry bar.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-ins, reservations for groups.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Devils+Cut+Calle+del+Leon+3+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.esmadrid.com/en/nightlife/devils-cut" target="_blank">esmadrid.com — 40-year rejuvenated</a>
-        <a class="btn" href="https://www.google.com/search?q=Devil's+Cut+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Classic Madrid,Unique Cocktail">
-      <h3>Museo Chicote <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Gran Vía 12, Madrid • Daily 6pm-3am • ~14€ cocktails — 4.5 rating</div>
-      <div class="tags"><span class="tag">Classic Madrid</span><span class="tag">Unique Cocktail</span></div>
-      <div class="why"><b>Why:</b> Historic 1931 — classic Madrid, Hemingway's bar.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-ins — historic 1931, no reservation needed.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Museo+Chicote+Gran+Via+12+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://museo-chicote.com" target="_blank">museo-chicote.com — 4.5 rating</a>
-        <a class="btn" href="https://www.google.com/search?q=Museo+Chicote+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#d97706" data-vibes="Classic Madrid,Good Vibes / Vermouth">
-      <h3>La Venencia <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle Echegaray 7, Barrio de las Letras, Madrid • Daily 12:30-3:30pm, 7:30pm-12am • ~4-6€ sherry — 4.7 rating</div>
-      <div class="tags"><span class="tag">Classic Madrid</span><span class="tag">Good Vibes / Vermouth</span></div>
-      <div class="why"><b>Why:</b> Sherry-only dive since 1920s, no music, dusty bottles, manzanilla.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> No reservation — sherry-only dive since 1920s.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=La+Venencia+Calle+Echegaray+7+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.esmadrid.com/en/nightlife/la-venencia" target="_blank">sherry-only dive — 4.7 rating</a>
-        <a class="btn" href="https://www.google.com/search?q=La+Venencia+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#d97706" data-vibes="Good Vibes / Vermouth,Classic Madrid">
-      <h3>Casa Camacho <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle de San Andrés 4, Malasaña, Madrid • Daily 12pm-2am • ~3-5€ vermouth + Yayo — cheap</div>
-      <div class="tags"><span class="tag">Good Vibes / Vermouth</span><span class="tag">Classic Madrid</span></div>
-      <div class="why"><b>Why:</b> Vermouth + Yayo (vermouth, gin, lemonade), cross-generational, cheap.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> No reservation — vermouth bar, cross-generational.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Casa+Camacho+Calle+de+San+Andres+4+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.esmadrid.com/en/nightlife/casa-camacho" target="_blank">vermouth legend — cheap</a>
-        <a class="btn" href="https://www.google.com/search?q=Casa+Camacho+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Good Vibes / Vermouth,Late Night Dance">
-      <h3>Gilda Haus <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle de Recoletos 13, Chueca, Madrid • Tue-Sat 7pm-2am • ~10-12€ — vermouth & Garibaldi Spritz</div>
-      <div class="tags"><span class="tag">Good Vibes / Vermouth</span><span class="tag">Late Night Dance</span></div>
-      <div class="why"><b>Why:</b> Bar + nightclub between, orange curtains, gildas, classic house under disco ball.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-ins — bar + nightclub between.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Gilda+Haus+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.instagram.com/gildahausmadrid/" target="_blank">Instagram @gildahausmadrid</a>
-        <a class="btn" href="https://www.google.com/search?q=Gilda+Haus+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#2563eb" data-vibes="Rooftop,Good Vibes">
-      <h3>360º Rooftop Bar — Hotel Riu Plaza España <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Hotel Riu Plaza España 27th floor, Gran Vía 84, Madrid • Daily 12pm-2am • ~15€ cocktails — 5.0 rating</div>
-      <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Highest rooftop in Madrid, 27th floor, 360 views.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations via hotel website — highest rooftop, 360 views. Sunset sells out.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=360+Rooftop+Bar+Hotel+Riu+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.riu.com/en/hotel/riu-plaza-espana/" target="_blank">riu.com — 5.0 rating, highest rooftop</a>
-        <a class="btn" href="https://www.google.com/search?q=360º+Rooftop+Bar+—+Hotel+Riu+Plaza+España+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Unique Cocktail,Good Vibes">
-      <h3>SALA EQUIS <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle Duque de Alba 4, La Latina, Madrid • Daily 12pm-1am • ~10€ cocktails — 5.0 rating</div>
-      <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Cinema bar — former erotic cinema, cocktails + films.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> No reservation — cinema bar, former erotic cinema.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=SALA+EQUIS+Calle+Duque+de+Alba+4+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://salaequis.com" target="_blank">salaequis.com — 5.0 rating</a>
-        <a class="btn" href="https://www.google.com/search?q=SALA+EQUIS+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#2563eb" data-vibes="Rooftop,Good Vibes">
-      <h3>Picalagartos Sky Bar <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Gran Vía 21, 9th floor — Hotel Santo Mauro / NH • Daily 1pm-1am • ~13€ cocktails</div>
-      <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> 360 views, bohemian vibe, Luca Anastasio cocktails.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations recommended — 360 views, bohemian vibe.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Picalagartos+Sky+Bar+Gran+Via+21+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://picalagartos.com" target="_blank">picalagartos.com — 360 views</a>
-        <a class="btn" href="https://www.google.com/search?q=Picalagartos+Sky+Bar+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#2563eb" data-vibes="Rooftop,Speakeasy / Hidden">
-      <h3>Casa Suecia <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle Marqués de Casa Riera 4, Centro, Madrid • Sat-Wed 8am-2am, Thu-Fri till 3:30am • ~12€ cocktails</div>
-      <div class="tags"><span class="tag">Rooftop</span><span class="tag">Speakeasy / Hidden</span></div>
-      <div class="why"><b>Why:</b> Rooftop + speakeasy, 360 view Cibeles/Retiro.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> No reservations — rooftop + speakeasy, 360 view.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Casa+Suecia+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://casasuecia.es" target="_blank">casasuecia.es — rooftop + speakeasy</a>
-        <a class="btn" href="https://www.google.com/search?q=Casa+Suecia+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#2563eb" data-vibes="Rooftop,Good Vibes">
-      <h3>Ático 11 — Iberostar Las Letras Gran Via <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Gran Vía 11, 6th floor, Madrid • Daily 5pm-1am • ~13€ — gin & tonics & mojitos</div>
-      <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Verdant rooftop garden, refined, gin & tonics & mojitos.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations recommended — verdant rooftop garden, refined.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Atico+11+Iberostar+Las+Letras+Gran+Via+11+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.iberostar.com/en/hotel/iberostar-las-letras-gran-via/" target="_blank">iberostar.com — verdant rooftop garden</a>
-        <a class="btn" href="https://www.google.com/search?q=Ático+11+—+Iberostar+Las+Letras+Gran+Via+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Speakeasy / Hidden,Unique Cocktail">
-      <h3>Fat Cats Cocktail House <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle de la Palma 4, Cortes, Madrid • Wed-Sun 7pm-2am • ~13€ — 4.3/58</div>
-      <div class="tags"><span class="tag">Speakeasy / Hidden</span><span class="tag">Unique Cocktail</span></div>
-      <div class="why"><b>Why:</b> 70s Palm Beach mansion vibe, spirit-forward cocktails, speakeasy.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations via IG/website. 70s Palm Beach mansion vibe.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Fat+Cats+Cocktail+House+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.instagram.com/fatcatsmadrid/" target="_blank">Instagram @fatcatsmadrid — 4.3/58</a>
-        <a class="btn" href="https://www.google.com/search?q=Fat+Cats+Cocktail+House+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#16a34a" data-vibes="Good Vibes,Unique Cocktail">
-      <h3>Savas Bar <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle del Espíritu Santo 11, Malasaña, Madrid • Daily 6pm-2am • ~10€ — 5.0/2</div>
-      <div class="tags"><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
-      <div class="why"><b>Why:</b> Cozy, lovely service, central location cozy evening.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-ins — cozy, lovely service.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Savas+Bar+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.google.com/search?q=Savas+Bar+Madrid" target="_blank">5.0/2 reviews — cozy</a>
-        <a class="btn" href="https://www.google.com/search?q=Savas+Bar+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#2563eb" data-vibes="Rooftop,Good Vibes">
-      <h3>La Terraza de Óscar — Room Mate Óscar <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Plaza Pedro Zerolo 12, Chueca, Madrid • Mon-Fri 4:30-11pm, Sat-Sun 3-11pm • ~12€ cocktails</div>
-      <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Designer rooftop above Chueca, pool vibe, great for sunset.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations recommended — designer rooftop.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=La+Terraza+de+Oscar+Plaza+Pedro+Zerolo+12+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://room-matehotels.com/en/oscar/" target="_blank">room-matehotels.com/oscar</a>
-        <a class="btn" href="https://www.google.com/search?q=La+Terraza+de+Óscar+—+Room+Mate+Óscar+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#ea580c" data-vibes="Classic Madrid,Good Vibes">
-      <h3>El Tigre Sidra Bar <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle Infantas 23, Chueca, Madrid • Daily 12pm-1am • ~5€ sidra + free tapas — 4.2/26113</div>
-      <div class="tags"><span class="tag">Classic Madrid</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Sidra pours endless free tapas — rowdiest generous ritual.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> No reservation — sidra pours endless free tapas. Rowdiest generous ritual.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=El+Tigre+Sidra+Bar+Calle+Infantas+23+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.esmadrid.com/en/nightlife/el-tigre-sidra-bar" target="_blank">esmadrid.com — 4.2/26113</a>
-        <a class="btn" href="https://www.google.com/search?q=El+Tigre+Sidra+Bar+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#2563eb" data-vibes="Rooftop,Good Vibes">
-      <h3>Thompson Madrid Rooftop <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle de Montera 24, Centro, Madrid • Daily 12pm-2am • ~14€ cocktails</div>
-      <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> New design hotel rooftop, Gran Vía views, refined cocktails.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations via hotel — rooftop with Gran Vía views.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Thompson+Madrid+Rooftop+Calle+de+Montera+24" target="_blank">Maps</a>
-        <a class="btn" href="https://www.thompsonhotels.com/madrid/rooftop" target="_blank">thompsonhotels.com — rooftop</a>
-        <a class="btn" href="https://www.google.com/search?q=Thompson+Madrid+Rooftop+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Late Night Dance,Good Vibes">
-      <h3>Goya Social Club <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle de Goya 43, Salamanca, Madrid • Fri-Sat 11pm-6am • ~15-20€ entry</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Madrid underground staple — house/techno, no frills.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Tickets via Resident Advisor / website.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Goya+Social+Club+Calle+de+Goya+43+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://goyasocialclub.com" target="_blank">goyasocialclub.com — club</a>
-        <a class="btn" href="https://www.google.com/search?q=Goya+Social+Club+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#9333ea" data-vibes="Late Night Dance,Speakeasy / Hidden">
-      <h3>Panda Club Madrid <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle de Recoletos 2, Centro, Madrid • Fri-Sat 11pm-5am • ~12€ entry — 5.0/5</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Speakeasy / Hidden</span></div>
-      <div class="why"><b>Why:</b> Small intimate club, great sound, 5.0/5 rating.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Reservations via IG — small club, intimate.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Panda+Club+Madrid+Calle+de+Recoletos+2" target="_blank">Maps</a>
-        <a class="btn" href="https://www.instagram.com/pandaclubmadrid/" target="_blank">Instagram @pandaclubmadrid — 5.0/5</a>
-        <a class="btn" href="https://www.google.com/search?q=Panda+Club+Madrid+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Late Night Dance,Good Vibes">
-      <h3>ThunderCat Club <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle Campoamor 11, Chueca, Madrid • Thu-Sat 11pm-5am • ~11€ with drink — 3.9/27</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Great music interior, 11€ with drink. Rock / indie crossover.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-in — great music interior, 11€ with drink.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=ThunderCat+Club+Calle+Campoamor+11+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.google.com/search?q=ThunderCat+Club+Madrid" target="_blank">3.9/27 — great music interior 11€ with drink</a>
-        <a class="btn" href="https://www.google.com/search?q=ThunderCat+Club+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Late Night Dance,Good Vibes">
-      <h3>ICON Madrid <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle de Toledo 16, La Latina, Madrid • Fri-Sat 11pm-6am • ~15€ entry</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Always fun, big dance club, tourist-friendly but energetic.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Tickets via Fever — always fun.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=ICON+Madrid+Calle+de+Toledo+16" target="_blank">Maps</a>
-        <a class="btn" href="https://www.esmadrid.com/en/nightlife/icon-madrid" target="_blank">esmadrid.com/icon-madrid — always fun</a>
-        <a class="btn" href="https://www.google.com/search?q=ICON+Madrid+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Late Night Dance,Good Vibes">
-      <h3>Tropical House <span class="badge res-walk">✓ Walk-in</span></h3>
-      <div class="meta">Calle de Santa Ana 4, La Latina, Madrid • Thu-Sat 10pm-4am • ~8€ drinks — 3.8/9</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
-      <div class="why"><b>Why:</b> Friendly will ask to dance, affordable drinks, places to sit, DJ great music.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Walk-in — friendly will ask to dance, affordable drinks.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Tropical+House+Calle+de+Santa+Ana+4+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://www.google.com/search?q=Tropical+House+Madrid" target="_blank">3.8/9 — friendly will ask to dance</a>
-        <a class="btn" href="https://www.google.com/search?q=Tropical+House+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-<div class="card" style="border-left-color:#db2777" data-vibes="Late Night Dance,Classic Madrid">
-      <h3>Sala El Sol <span class="badge res-need">⚑ Reservation</span></h3>
-      <div class="meta">Calle Jardines 3, Centro, Madrid • Wed-Sat 9pm-5am • ~10-12€ entry — 3.6/14</div>
-      <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Classic Madrid</span></div>
-      <div class="why"><b>Why:</b> Friendly staff clean restrooms nice space. Historic concert hall turned late club.</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> Tickets via website — friendly staff clean restrooms nice space.</div>
-      <div class="btns">
-        <a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Sala+El+Sol+Calle+Jardines+3+Madrid" target="_blank">Maps</a>
-        <a class="btn" href="https://salaelsol.com" target="_blank">salaelsol.com — 3.6/14</a>
-        <a class="btn" href="https://www.google.com/search?q=Sala+El+Sol+Madrid+google+reviews" target="_blank">Google Reviews</a>
-      </div>
-    </div>
-</div>
+    <input id="bar-search" class="search" placeholder="Search bars, vibe, why..."/>
+    <div id="bars-list">
+<div class="card" data-bar-id="1" data-vibes="unique cocktail speakeasy / hidden good vibes" data-name="salmon guru" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>Salmon Guru</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(1,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(1,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Echegaray 21, Centro 28014, Madrid • Sun-Thu 4pm-2am, Fri-Sat 4pm-2:30am</div>
+  <div class="meta">~12€ cocktails — 4.6/660 reviews <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Good Vibes</span></div>
+  <div class="why">World&#x27;s 50 Best Bars #23 in 2024. Maximalist comic-book chapel vibe — neon saints, irreverent menu Fruity to WTF?, signature La Mano de Dios. The one everyone talks about.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Salmon+Guru+Calle+de+Echegaray+21+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://salmonguru.es" target="_blank" rel="noopener">🔗 salmonguru.es — 4.6/660 reviews</a>
+    
+    <a href="https://www.google.com/search?q=Salmon Guru+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
 </div>
 
-<div id="itinerary-pane" style="display:none"><div id="itinerary-list" class="sub">Itinerary cards from Hatch export — see Hatch version for full drag-drop. For now this GitHub version focuses on Bars. Your full itinerary is in Hatch.</div></div>
-<div id="hotel-pane" style="display:none"><div class="card" style="border-left-color:var(--green-b)"><h3>Smartrental Collection Gran Via Centric</h3><div class="meta">42 Calle Gran Vía, 28013 Madrid • Check-in Sat Oct 10 3PM → Sat Oct 17 11AM • Conf #5646283231 PIN 0395 • 7 nights €2,292.64</div><div class="btns"><a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Smartrental%20Collection%20Gran%20Via%20Centric%20Madrid" target="_blank">Maps</a><a class="btn" href="https://www.booking.com/hotel/es/smartrental-collection-gran-via-centric.html" target="_blank">Booking.com</a></div></div></div>
+<div class="card" data-bar-id="2" data-vibes="unique cocktail good vibes / vermouth classic madrid" data-name="angelita madrid" style="border-left-color:#16a34a;background:#dcfce7">
+  <div class="card-head"><h3>Angelita Madrid</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(2,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(2,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de la Reina 4, Chueca, Madrid • Mon-Fri 17:30-02:00/02:30 (bar). Dining closed Sat Sun — check</div>
+  <div class="meta">~13-14€ cocktails — 4.5/608 <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Good Vibes / Vermouth</span><span class="tag">Classic Madrid</span></div>
+  <div class="why">Best cocktail bar in Spain FIBAR 2021, World&#x27;s 50 Best #65 2024. No ice / no citrus sustainable cocktails, wine bar 2000+ bottles. Villalón brothers lab — calmer, creative, date spot.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Angelita+Madrid+Calle+de+la+Reina+4" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://madrid-angelita.es" target="_blank" rel="noopener">🔗 madrid-angelita.es — 4.5/608</a>
+    <a href="https://www.opentable.com/r/angelita-madrid" target="_blank" rel="noopener">Reserve dining via OpenTable</a>
+    <a href="https://www.google.com/search?q=Angelita Madrid+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
 </div>
+
+<div class="card" data-bar-id="3" data-vibes="unique cocktail speakeasy / hidden classic madrid" data-name="1862 dry bar" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>1862 Dry Bar</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(3,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(3,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle del Pez 27, Malasaña, Madrid • Daily 3:30pm-2am</div>
+  <div class="meta">~12-14€ — 4.7/297, 4.6/1200 Google <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Classic Madrid</span></div>
+  <div class="why">Classic speakeasy in 1862 palace. 150+ brands, pure classic cocktail focus. Tiny, proper bartenders-only vibe — no gimmicks, just perfect classics.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=1862+Dry+Bar+Calle+del+Pez+27+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://1862drybar.com" target="_blank" rel="noopener">🔗 1862drybar.com — 4.7/297</a>
+    
+    <a href="https://www.google.com/search?q=1862 Dry Bar+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="4" data-vibes="unique cocktail speakeasy / hidden good vibes" data-name="macera taller bar" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>Macera Taller Bar</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(4,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(4,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de San Mateo 21, 28004 Madrid • Tue-Sun 7pm-2am (check IG for evolving hours)</div>
+  <div class="meta">~12-13€ — 4.8 rating <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Good Vibes</span></div>
+  <div class="why">House-infused rums/gins, constantly evolving menu, industrial chic exposed brick. Ultra-creative lab where spirits are made in-house.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Macera+Taller+Bar+Calle+de+San+Mateo+21+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://macera.es" target="_blank" rel="noopener">🔗 macera.es — 4.8 highly rated</a>
+    <a href="https://www.google.com/search?q=Macera+Taller+Bar+Madrid+reservation" target="_blank" rel="noopener">Check reservation</a>
+    <a href="https://www.google.com/search?q=Macera Taller Bar+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="5" data-vibes="unique cocktail speakeasy / hidden good vibes" data-name="inclán brutal bar" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>Inclán Brutal Bar</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(5,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(5,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Álvarez Gato 4, Barrio de las Letras, Madrid • Daily 7pm-2:30am (approx)</div>
+  <div class="meta">~12€ — 4.7/19872 <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Good Vibes</span></div>
+  <div class="why">Drinks served in mini bathtubs, skulls, bird cages. Avant-garde, theatrical, mandatory stop vibe for the Gram and taste.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Inclan+Brutal+Bar+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://inclanbrutalbar.com" target="_blank" rel="noopener">🔗 inclanbrutalbar.com — 4.7/19872</a>
+    
+    <a href="https://www.google.com/search?q=Inclán Brutal Bar+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="6" data-vibes="unique cocktail classic madrid good vibes" data-name="del diego cocktail bar" style="border-left-color:#16a34a;background:#dcfce7">
+  <div class="card-head"><h3>Del Diego Cocktail Bar</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(6,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(6,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de la Reina 12, Chueca, Madrid • Mon-Thu 7pm-3am, Fri-Sat 7pm-3:30am, closed Sun</div>
+  <div class="meta">~13€ cocktails — Classic <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Classic Madrid</span><span class="tag">Good Vibes</span></div>
+  <div class="why">NY-style since 1990, wood-paneled award-winning interior. Old-school classic, consistently ranked Madrid top 5.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Del+Diego+Cocktail+Bar+Calle+de+la+Reina+12+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.esmadrid.com/en/nightlife/del-diego" target="_blank" rel="noopener">🔗 esmadrid.com/del-diego</a>
+    
+    <a href="https://www.google.com/search?q=Del Diego Cocktail Bar+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="7" data-vibes="late night dance good vibes unique cocktail" data-name="teatro kapital" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>Teatro Kapital</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(7,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(7,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Atocha 125, Madrid — 7 floors • 11pm-6am (Thu-Sat peak)</div>
+  <div class="meta">~20-25€ entry incl. drinks — 4.44/7454 <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">Madrid&#x27;s high temple of hedonism — 7 floors different music (R&amp;B, salsa, house). All-nighter you have to see once.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Teatro+Kapital+Calle+de+Atocha+125+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://teatrokapital.com" target="_blank" rel="noopener">🔗 teatrokapital.com — 4.44/7454</a>
+    <a href="https://www.feverup.com/m/112200" target="_blank" rel="noopener">Tickets via Fever</a>
+    <a href="https://www.google.com/search?q=Teatro Kapital+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="8" data-vibes="late night dance good vibes unique cocktail" data-name="mondo disko" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>Mondo Disko</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(8,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(8,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Hernán Cortés, Centro, Madrid • Fri-Sat 11:30pm-6am (check schedule)</div>
+  <div class="meta">~12-20€ entry <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">Small dark house/techno institution, local DJs, best sound system in Centro. Opposite of Kapital — for locals who know.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Mondo+Disko+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://mondodisko.es" target="_blank" rel="noopener">🔗 mondodisko.es — techno institution</a>
+    <a href="https://www.google.com/search?q=Mondo+Disko+Madrid+tickets" target="_blank" rel="noopener">Find tickets</a>
+    <a href="https://www.google.com/search?q=Mondo Disko+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="9" data-vibes="late night dance good vibes unique cocktail" data-name="marula café" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>Marula Café</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(9,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(9,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle Caños Viejos 3, La Latina, Madrid • Daily 11pm-5am, live band early then DJs</div>
+  <div class="meta">~10-12€ cocktails, free before 12am <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">Funk / soul / disco, live band early then DJs. Cocktails actually good, not just club juice. Friendly dance floor.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Marula+Cafe+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.marulacafe.com" target="_blank" rel="noopener">🔗 marulacafe.com — funk/soul</a>
+    
+    <a href="https://www.google.com/search?q=Marula Café+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="10" data-vibes="late night dance good vibes classic madrid" data-name="café berlín" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>Café Berlín</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(10,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(10,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Costanilla de los Ángeles 20, Centro, Madrid • Tue-Sun 8pm-3am (live jazz 9pm-12am, club after)</div>
+  <div class="meta">~10-15€ entry / cocktails — 4.4/14 <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span><span class="tag">Classic Madrid</span></div>
+  <div class="why">Live jazz / world music till midnight, then turns into a dance club. Great crowd, central — best culture + late night combo.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Cafe+Berlin+Costanilla+de+los+Angeles+20+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://berlincafe.es" target="_blank" rel="noopener">🔗 berlincafe.es — 4.4/14</a>
+    <a href="https://berlincafe.es/" target="_blank" rel="noopener">Check program</a>
+    <a href="https://www.google.com/search?q=Café Berlín+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="11" data-vibes="late night dance good vibes" data-name="planet club" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>Planet Club</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(11,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(11,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle del Príncipe 20, Madrid (near Sol) • Sun-Thu 8pm-3am, Fri-Sat 8pm-3:30am</div>
+  <div class="meta">~10€ entry incl. drink <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
+  <div class="why">Neon-drenched, 365 days high-energy crowds. Right by Sol station so easy home. Perfect last stop.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Planet+Club+Calle+del+Principe+20+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.instagram.com/planetclubmadrid/" target="_blank" rel="noopener">🔗 Instagram @planetclubmadrid</a>
+    
+    <a href="https://www.google.com/search?q=Planet Club+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="12" data-vibes="unique cocktail good vibes classic madrid" data-name="rosi la loca" style="border-left-color:#16a34a;background:#dcfce7">
+  <div class="card-head"><h3>Rosi La Loca</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(12,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(12,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Cádiz 4, Centro, Madrid • Daily 1pm-2am (food + cocktails)</div>
+  <div class="meta">~13€ cocktails — 4.7/24095 <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Good Vibes</span><span class="tag">Classic Madrid</span></div>
+  <div class="why">Gastropub, inventive cocktails in standout glassware. Maximalist decor, huge rating — Instagrammable and tasty.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Rosi+La+Loca+Calle+de+Cadiz+4+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://rosilaloca.com" target="_blank" rel="noopener">🔗 rosilaloca.com — 4.7/24095</a>
+    <a href="https://rosilaloca.com" target="_blank" rel="noopener">Reserve</a>
+    <a href="https://www.google.com/search?q=Rosi La Loca+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="13" data-vibes="rooftop good vibes unique cocktail" data-name="azotea del círculo" style="border-left-color:#2563eb;background:#dbeafe">
+  <div class="card-head"><h3>Azotea del Círculo</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(13,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(13,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">C. del Marqués de Casa Riera 2, Centro — Círculo de Bellas Artes rooftop • Daily 10am-1am (rooftop sunset prime 8-11pm)</div>
+  <div class="meta">~12-14€ cocktails — 4.2/10704 <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">360-degree skyline from Bellas Artes rooftop. Craft cocktails, live beats, best sunset in Centro.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Azotea+del+Circulo+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://circulobellasartes.com/azotea/" target="_blank" rel="noopener">🔗 circulobellasartes.com — 4.2/10704</a>
+    
+    <a href="https://www.google.com/search?q=Azotea del Círculo+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="14" data-vibes="rooftop good vibes classic madrid" data-name="azotea cibeles" style="border-left-color:#2563eb;background:#dbeafe">
+  <div class="card-head"><h3>Azotea Cibeles</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(14,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(14,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Plaza Cibeles 1, 6th floor — Palacio de Cibeles • Daily 11am-1am</div>
+  <div class="meta">~13€ cocktails — 4.1/9475 <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span><span class="tag">Classic Madrid</span></div>
+  <div class="why">Rooftop cocktails with Cibeles Palace view, Mediterranean cuisine. Iconic, tourist but worth it for view.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Azotea+Cibeles+Plaza+Cibeles+1+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://azoteacibeles.com" target="_blank" rel="noopener">🔗 azoteacibeles.com — 4.1/9475</a>
+    <a href="https://azoteacibeles.com" target="_blank" rel="noopener">Reserve</a>
+    <a href="https://www.google.com/search?q=Azotea Cibeles+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="15" data-vibes="speakeasy / hidden unique cocktail classic madrid" data-name="bad company 1920" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>Bad Company 1920</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(15,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(15,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle Miguel Moya 8, near Callao, Madrid • Tue-Sun 7pm-2:30am</div>
+  <div class="meta">~13€ cocktails <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Speakeasy / Hidden</span><span class="tag">Unique Cocktail</span><span class="tag">Classic Madrid</span></div>
+  <div class="why">1920s speakeasy near Callao, cocktail-led. Hidden entrance, jazz, proper prohibition vibe.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Bad+Company+1920+Calle+Miguel+Moya+8+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://badcompany1920.com" target="_blank" rel="noopener">🔗 badcompany1920.com — speakeasy</a>
+    <a href="https://badcompany1920.com" target="_blank" rel="noopener">Reserve</a>
+    <a href="https://www.google.com/search?q=Bad Company 1920+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="16" data-vibes="unique cocktail speakeasy / hidden good vibes" data-name="devil&#x27;s cut" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>Devil&#x27;s Cut</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(16,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(16,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle del León 3, Centro, Madrid • Daily 6pm-2am</div>
+  <div class="meta">~12€ cocktails <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Good Vibes</span></div>
+  <div class="why">40-year-old bar rejuvenated — Japanese techniques + NY cocktail + sherry bar. Clever, layered.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Devils+Cut+Calle+del+Leon+3+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.esmadrid.com/en/nightlife/devils-cut" target="_blank" rel="noopener">🔗 esmadrid.com — 40-year rejuvenated</a>
+    
+    <a href="https://www.google.com/search?q=Devil&#x27;s Cut+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="17" data-vibes="classic madrid unique cocktail good vibes" data-name="museo chicote" style="border-left-color:#16a34a;background:#dcfce7">
+  <div class="card-head"><h3>Museo Chicote</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(17,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(17,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Gran Vía 12, Madrid • Daily 6pm-3am</div>
+  <div class="meta">~14€ cocktails — 4.5 rating <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Classic Madrid</span><span class="tag">Unique Cocktail</span><span class="tag">Good Vibes</span></div>
+  <div class="why">Historic 1931 — classic Madrid, Hemingway&#x27;s bar. Birthplace of Spanish cocktail culture. Art Deco icon.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Museo+Chicote+Gran+Via+12+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://museo-chicote.com" target="_blank" rel="noopener">🔗 museo-chicote.com — 4.5 rating</a>
+    
+    <a href="https://www.google.com/search?q=Museo Chicote+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="18" data-vibes="classic madrid good vibes / vermouth speakeasy / hidden" data-name="la venencia" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>La Venencia</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(18,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(18,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle Echegaray 7, Barrio de las Letras, Madrid • Daily 12:30-3:30pm, 7:30pm-12am</div>
+  <div class="meta">~4-6€ sherry — 4.7 rating <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Classic Madrid</span><span class="tag">Good Vibes / Vermouth</span><span class="tag">Speakeasy / Hidden</span></div>
+  <div class="why">Sherry-only dive since 1920s, no music, dusty bottles, manzanilla. Time capsule — anti-cocktail but essential.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=La+Venencia+Calle+Echegaray+7+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.esmadrid.com/en/nightlife/la-venencia" target="_blank" rel="noopener">🔗 sherry-only dive — 4.7 rating</a>
+    
+    <a href="https://www.google.com/search?q=La Venencia+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="19" data-vibes="good vibes / vermouth classic madrid good vibes" data-name="casa camacho" style="border-left-color:#d97706;background:#fef3c7">
+  <div class="card-head"><h3>Casa Camacho</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(19,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(19,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de San Andrés 4, Malasaña, Madrid • Daily 12pm-2am</div>
+  <div class="meta">~3-5€ vermouth + Yayo — cheap <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Good Vibes / Vermouth</span><span class="tag">Classic Madrid</span><span class="tag">Good Vibes</span></div>
+  <div class="why">Vermouth + Yayo (vermouth, gin, lemonade), cross-generational, cheap. Madrid institution — best pre-crawl warm-up.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Casa+Camacho+Calle+de+San+Andres+4+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.esmadrid.com/en/nightlife/casa-camacho" target="_blank" rel="noopener">🔗 vermouth legend — cheap</a>
+    
+    <a href="https://www.google.com/search?q=Casa Camacho+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="20" data-vibes="good vibes / vermouth late night dance good vibes" data-name="gilda haus" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>Gilda Haus</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(20,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(20,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Recoletos 13, Chueca, Madrid • Tue-Sat 7pm-2am</div>
+  <div class="meta">~10-12€ — vermouth &amp; Garibaldi Spritz <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Good Vibes / Vermouth</span><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
+  <div class="why">Bar + nightclub between, orange curtains, gildas, classic house under disco ball. Vermouth &amp; Garibaldi Spritz — chic.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Gilda+Haus+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.instagram.com/gildahausmadrid/" target="_blank" rel="noopener">🔗 Instagram @gildahausmadrid</a>
+    
+    <a href="https://www.google.com/search?q=Gilda Haus+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="21" data-vibes="rooftop good vibes unique cocktail" data-name="360º rooftop bar — hotel riu plaza españa" style="border-left-color:#2563eb;background:#dbeafe">
+  <div class="card-head"><h3>360º Rooftop Bar — Hotel Riu Plaza España</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(21,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(21,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Hotel Riu Plaza España 27th floor, Gran Vía 84, Madrid • Daily 12pm-2am</div>
+  <div class="meta">~15€ cocktails — 5.0 rating <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">Highest rooftop in Madrid, 27th floor, 360 views. Tourist-y but view is unbeatable for sunset cocktails.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=360+Rooftop+Bar+Hotel+Riu+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.riu.com/en/hotel/riu-plaza-espana/" target="_blank" rel="noopener">🔗 riu.com — 5.0 rating, highest rooftop</a>
+    <a href="https://www.riu.com/en/hotel/riu-plaza-espana/" target="_blank" rel="noopener">Reserve</a>
+    <a href="https://www.google.com/search?q=360º Rooftop Bar — Hotel Riu Plaza España+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="22" data-vibes="unique cocktail good vibes speakeasy / hidden" data-name="sala equis" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>SALA EQUIS</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(22,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(22,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle Duque de Alba 4, La Latina, Madrid • Daily 12pm-1am</div>
+  <div class="meta">~10€ cocktails — 5.0 rating <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Unique Cocktail</span><span class="tag">Good Vibes</span><span class="tag">Speakeasy / Hidden</span></div>
+  <div class="why">Cinema bar — former erotic cinema, cocktails + films. Velvet seats, eclectic crowd, ultra-cool.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=SALA+EQUIS+Calle+Duque+de+Alba+4+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://salaequis.com" target="_blank" rel="noopener">🔗 salaequis.com — 5.0 rating</a>
+    
+    <a href="https://www.google.com/search?q=SALA EQUIS+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="23" data-vibes="rooftop good vibes unique cocktail" data-name="picalagartos sky bar" style="border-left-color:#2563eb;background:#dbeafe">
+  <div class="card-head"><h3>Picalagartos Sky Bar</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(23,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(23,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Gran Vía 21, 9th floor — Hotel Santo Mauro / NH • Daily 1pm-1am</div>
+  <div class="meta">~13€ cocktails <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">360 views, bohemian vibe, Luca Anastasio cocktails. Lush terrace above Gran Vía.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Picalagartos+Sky+Bar+Gran+Via+21+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://picalagartos.com" target="_blank" rel="noopener">🔗 picalagartos.com — 360 views</a>
+    <a href="https://picalagartos.com" target="_blank" rel="noopener">Reserve</a>
+    <a href="https://www.google.com/search?q=Picalagartos Sky Bar+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="24" data-vibes="rooftop speakeasy / hidden good vibes" data-name="casa suecia" style="border-left-color:#2563eb;background:#dbeafe">
+  <div class="card-head"><h3>Casa Suecia</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(24,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(24,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle Marqués de Casa Riera 4, Centro, Madrid • Sat-Wed 8am-2am, Thu-Fri till 3:30am</div>
+  <div class="meta">~12€ cocktails <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Rooftop</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Good Vibes</span></div>
+  <div class="why">Rooftop + speakeasy, 360 view Cibeles/Retiro. Swedish-inspired, great sunset to late.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Casa+Suecia+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://casasuecia.es" target="_blank" rel="noopener">🔗 casasuecia.es — rooftop + speakeasy</a>
+    
+    <a href="https://www.google.com/search?q=Casa Suecia+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="25" data-vibes="rooftop good vibes unique cocktail" data-name="ático 11 — iberostar las letras gran via" style="border-left-color:#2563eb;background:#dbeafe">
+  <div class="card-head"><h3>Ático 11 — Iberostar Las Letras Gran Via</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(25,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(25,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Gran Vía 11, 6th floor, Madrid • Daily 5pm-1am</div>
+  <div class="meta">~13€ — gin &amp; tonics &amp; mojitos <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">Verdant rooftop garden, refined, gin &amp; tonics &amp; mojitos. Lush hidden above Gran Vía.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Atico+11+Iberostar+Las+Letras+Gran+Via+11+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.iberostar.com/en/hotel/iberostar-las-letras-gran-via/" target="_blank" rel="noopener">🔗 iberostar.com — verdant rooftop garden</a>
+    <a href="https://www.iberostar.com/en/hotel/iberostar-las-letras-gran-via/" target="_blank" rel="noopener">Reserve</a>
+    <a href="https://www.google.com/search?q=Ático 11 — Iberostar Las Letras Gran Via+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="26" data-vibes="speakeasy / hidden unique cocktail good vibes" data-name="fat cats cocktail house" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>Fat Cats Cocktail House</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(26,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(26,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de la Palma 4, Cortes, Madrid • Wed-Sun 7pm-2am</div>
+  <div class="meta">~13€ — 4.3/58 <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Speakeasy / Hidden</span><span class="tag">Unique Cocktail</span><span class="tag">Good Vibes</span></div>
+  <div class="why">70s Palm Beach mansion vibe, spirit-forward cocktails, speakeasy. Lush, kitsch, delicious.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Fat+Cats+Cocktail+House+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.instagram.com/fatcatsmadrid/" target="_blank" rel="noopener">🔗 Instagram @fatcatsmadrid — 4.3/58</a>
+    <a href="https://www.instagram.com/fatcatsmadrid/" target="_blank" rel="noopener">Reserve via IG</a>
+    <a href="https://www.google.com/search?q=Fat Cats Cocktail House+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="27" data-vibes="good vibes unique cocktail classic madrid" data-name="savas bar" style="border-left-color:#16a34a;background:#dcfce7">
+  <div class="card-head"><h3>Savas Bar</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(27,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(27,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle del Espíritu Santo 11, Malasaña, Madrid • Daily 6pm-2am</div>
+  <div class="meta">~10€ — 5.0/2 <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span><span class="tag">Classic Madrid</span></div>
+  <div class="why">Cozy, lovely service, central location cozy evening. Tiny Malasaña gem.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Savas+Bar+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.google.com/search?q=Savas+Bar+Madrid" target="_blank" rel="noopener">🔗 5.0/2 reviews — cozy</a>
+    
+    <a href="https://www.google.com/search?q=Savas Bar+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="28" data-vibes="rooftop good vibes classic madrid" data-name="la terraza de óscar — room mate óscar" style="border-left-color:#2563eb;background:#dbeafe">
+  <div class="card-head"><h3>La Terraza de Óscar — Room Mate Óscar</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(28,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(28,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Plaza Pedro Zerolo 12, Chueca, Madrid • Mon-Fri 4:30-11pm, Sat-Sun 3-11pm</div>
+  <div class="meta">~12€ cocktails <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span><span class="tag">Classic Madrid</span></div>
+  <div class="why">Designer rooftop above Chueca, pool vibe, great for sunset before cocktails.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=La+Terraza+de+Oscar+Plaza+Pedro+Zerolo+12+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://room-matehotels.com/en/oscar/" target="_blank" rel="noopener">🔗 room-matehotels.com/oscar</a>
+    <a href="https://room-matehotels.com/en/oscar/" target="_blank" rel="noopener">Reserve</a>
+    <a href="https://www.google.com/search?q=La Terraza de Óscar — Room Mate Óscar+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="29" data-vibes="classic madrid good vibes good vibes / vermouth" data-name="el tigre sidra bar" style="border-left-color:#d97706;background:#fef3c7">
+  <div class="card-head"><h3>El Tigre Sidra Bar</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(29,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(29,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle Infantas 23, Chueca, Madrid • Daily 12pm-1am</div>
+  <div class="meta">~5€ sidra + free tapas — 4.2/26113 <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Classic Madrid</span><span class="tag">Good Vibes</span><span class="tag">Good Vibes / Vermouth</span></div>
+  <div class="why">Sidra pours endless free tapas — rowdiest generous ritual. €6 small beer gets mountain of patatas. Madrid institution.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=El+Tigre+Sidra+Bar+Calle+Infantas+23+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.esmadrid.com/en/nightlife/el-tigre-sidra-bar" target="_blank" rel="noopener">🔗 esmadrid.com — 4.2/26113</a>
+    
+    <a href="https://www.google.com/search?q=El Tigre Sidra Bar+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="30" data-vibes="rooftop good vibes unique cocktail" data-name="thompson madrid rooftop" style="border-left-color:#2563eb;background:#dbeafe">
+  <div class="card-head"><h3>Thompson Madrid Rooftop</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(30,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(30,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Montera 24, Centro, Madrid • Daily 1pm-1am</div>
+  <div class="meta">~14€ cocktails <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Rooftop</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">New design hotel rooftop, Gran Vía views, refined cocktails. Freshest rooftop in town.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Thompson+Madrid+Rooftop+Calle+de+Montera+24" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.thompsonhotels.com/madrid/rooftop" target="_blank" rel="noopener">🔗 thompsonhotels.com — rooftop</a>
+    <a href="https://www.thompsonhotels.com/madrid/rooftop" target="_blank" rel="noopener">Reserve</a>
+    <a href="https://www.google.com/search?q=Thompson Madrid Rooftop+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="31" data-vibes="late night dance good vibes unique cocktail" data-name="goya social club" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>Goya Social Club</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(31,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(31,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Goya 43, Salamanca, Madrid • Fri-Sat 11pm-6am</div>
+  <div class="meta">~15-20€ entry <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">Madrid underground staple — house/techno, no frills, great crowd. For those who know.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Goya+Social+Club+Calle+de+Goya+43+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://goyasocialclub.com" target="_blank" rel="noopener">🔗 goyasocialclub.com — club</a>
+    <a href="https://goyasocialclub.com" target="_blank" rel="noopener">Tickets</a>
+    <a href="https://www.google.com/search?q=Goya Social Club+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="32" data-vibes="late night dance speakeasy / hidden good vibes" data-name="panda club madrid" style="border-left-color:#9333ea;background:#f3e8ff">
+  <div class="card-head"><h3>Panda Club Madrid</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(32,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(32,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Recoletos 2, Centro, Madrid • Fri-Sat 11pm-5am</div>
+  <div class="meta">~12€ entry — 5.0/5 <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Speakeasy / Hidden</span><span class="tag">Good Vibes</span></div>
+  <div class="why">Small intimate club, great sound, 5.0/5 rating. Hidden gem near Retiro.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Panda+Club+Madrid+Calle+de+Recoletos+2" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.instagram.com/pandaclubmadrid/" target="_blank" rel="noopener">🔗 Instagram @pandaclubmadrid — 5.0/5</a>
+    <a href="https://www.instagram.com/pandaclubmadrid/" target="_blank" rel="noopener">IG Reserve</a>
+    <a href="https://www.google.com/search?q=Panda Club Madrid+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="33" data-vibes="late night dance good vibes unique cocktail" data-name="thundercat club" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>ThunderCat Club</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(33,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(33,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle Campoamor 11, Chueca, Madrid • Thu-Sat 11pm-5am</div>
+  <div class="meta">~11€ with drink — 3.9/27 <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span><span class="tag">Unique Cocktail</span></div>
+  <div class="why">Great music interior, 11€ with drink. Rock / indie crossover, fun crowd.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=ThunderCat+Club+Calle+Campoamor+11+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.google.com/search?q=ThunderCat+Club+Madrid" target="_blank" rel="noopener">🔗 3.9/27 — great music interior 11€ with drink</a>
+    
+    <a href="https://www.google.com/search?q=ThunderCat Club+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="34" data-vibes="late night dance good vibes" data-name="icon madrid" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>ICON Madrid</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(34,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(34,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Toledo 16, La Latina, Madrid • Fri-Sat 11pm-6am</div>
+  <div class="meta">~15€ entry <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span></div>
+  <div class="why">Always fun, big dance club, tourist-friendly but energetic. Good when Kapital queue too long.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=ICON+Madrid+Calle+de+Toledo+16" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.esmadrid.com/en/nightlife/icon-madrid" target="_blank" rel="noopener">🔗 esmadrid.com/icon-madrid — always fun</a>
+    <a href="https://www.feverup.com/m/112200" target="_blank" rel="noopener">Tickets via Fever</a>
+    <a href="https://www.google.com/search?q=ICON Madrid+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="35" data-vibes="late night dance good vibes good vibes / vermouth" data-name="tropical house" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>Tropical House</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(35,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(35,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle de Santa Ana 4, La Latina, Madrid • Thu-Sat 10pm-4am</div>
+  <div class="meta">~8€ drinks — 3.8/9 <span class="res-badge walk">✓ Walk-in</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Good Vibes</span><span class="tag">Good Vibes / Vermouth</span></div>
+  <div class="why">Friendly will ask to dance, affordable drinks, places to sit, DJ great music. Latin / tropical crossover.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Tropical+House+Calle+de+Santa+Ana+4+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://www.google.com/search?q=Tropical+House+Madrid" target="_blank" rel="noopener">🔗 3.8/9 — friendly will ask to dance</a>
+    
+    <a href="https://www.google.com/search?q=Tropical House+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div>
+
+<div class="card" data-bar-id="36" data-vibes="late night dance classic madrid good vibes" data-name="sala el sol" style="border-left-color:#db2777;background:#fce7f3">
+  <div class="card-head"><h3>Sala El Sol</h3><div class="vote-row">
+    <button class="vote-btn up" onclick="voteBar(36,'up',this)" aria-label="Thumbs up">👍 <span class="vc">0</span></button>
+    <button class="vote-btn down" onclick="voteBar(36,'down',this)" aria-label="Thumbs down">👎 <span class="vc">0</span></button>
+  </div></div>
+  <div class="meta">Calle Jardines 3, Centro, Madrid • Wed-Sat 9pm-5am</div>
+  <div class="meta">~10-12€ entry — 3.6/14 <span class="res-badge need">⚑ Reservation</span></div>
+  <div class="tags"><span class="tag">Late Night Dance</span><span class="tag">Classic Madrid</span><span class="tag">Good Vibes</span></div>
+  <div class="why">Friendly staff clean restrooms nice space. Historic concert hall turned late club — indie / pop.</div>
+  <div class="links">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Sala+El+Sol+Calle+Jardines+3+Madrid" target="_blank" rel="noopener">📍 Maps</a>
+    <a href="https://salaelsol.com" target="_blank" rel="noopener">🔗 salaelsol.com — 3.6/14</a>
+    <a href="https://salaelsol.com" target="_blank" rel="noopener">Tickets</a>
+    <a href="https://www.google.com/search?q=Sala El Sol+Madrid+reviews" target="_blank" rel="noopener">⭐ Reviews</a>
+  </div>
+</div></div>
+  </div>
+  <div id="pane-itinerary" style="display:none">
+    <div class="filters" id="it-filters">
+      <button class="chip active" data-f="All">All</button>
+      <button class="chip" data-f="Concrete">Concrete</button>
+      <button class="chip" data-f="Maybe">Maybe</button>
+      <button class="chip" data-f="TBD">TBD</button>
+    </div>
+    <div id="it-list">
+<div class="card itin" data-date="2026-10-10" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-10 Saturday Night</span></div>
+  <h3>Arrive Madrid</h3>
+  
+  <div class="meta">AA SFO-MAD</div>
+  <div class="links"><a href="https://www.google.com/travel/flights" target="_blank" rel="noopener">🔗 https://www.google.com/travel/flights</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-10" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-10 Saturday Night</span></div>
+  <h3>Check-in - Smartrental Gran Via Centric</h3>
+  <div class="meta">42 Calle Gran Vía, Madrid 28013</div>
+  <div class="meta">Conf #5646283231 PIN 0395 • 42 Calle Gran Vía, Madrid 28013 • Check-in Sat Oct 10 2026 3PM, Check-out Sat Oct 17 11AM, 7 nights • One-Bedroom Apartment for 3 adults • €2,292.64 paid, non-refundable • Conf 5646283231 PIN 0395 - 42 Calle Gran Via - 3PM check-in</div>
+  <div class="links"><a href="https://www.hotels.com/ho1046985952/smartrental-collection-gran-via-centric-madrid-spain/" target="_blank" rel="noopener">🔗 https://www.hotels.com/ho1046985952/smar</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-10" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-10 Saturday Night</span></div>
+  <h3>Free concert - Sebastian Yatra</h3>
+  
+  <div class="meta">Hispanidad 2026 free concert</div>
+  <div class="links"><a href="https://sebastianyatra.com/pages/shows-2026" target="_blank" rel="noopener">🔗 https://sebastianyatra.com/pages/shows-2</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-10" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-10 Saturday Night</span></div>
+  <h3>Marta Sanchez - Hispanidad 2026</h3>
+  
+  <div class="meta">150+ activities Oct 2-12</div>
+  <div class="links"><a href="https://www.comunidad.madrid/hispanidad-2026" target="_blank" rel="noopener">🔗 https://www.comunidad.madrid/hispanidad-</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-11" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-11 Sunday Afternoon</span></div>
+  <h3>Reina Sofia Museum - Guernica</h3>
+  
+  <div class="meta">Must see</div>
+  <div class="links"><a href="https://www.museoreinasofia.es/en" target="_blank" rel="noopener">🔗 https://www.museoreinasofia.es/en</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-11" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-11 Sunday Afternoon</span></div>
+  <h3>El Rastro Flea Market</h3>
+  
+  <div class="meta">Sundays only - Oct 11 is Sunday</div>
+  <div class="links"><a href="https://www.esmadrid.com/en/shopping/el-rastro" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en/shopping/el-</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-11" data-status="TBD" style="border-left-color:#ea580c;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#ffedd5;color:#9a3412">TBD</span><span class="date">2026-10-11 Sunday Morning</span></div>
+  <h3>LSD</h3>
+  
+  <div class="meta">TENTATIVE LSD</div>
+  <div class="links"><a href="https://www.esmadrid.com/en/whats-on" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en/whats-on</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-11" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-11 Sunday Morning</span></div>
+  <h3>Walk around Centro</h3>
+  
+  <div class="meta">Explore neighborhoods</div>
+  <div class="links"><a href="https://www.esmadrid.com/en" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-11" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-11 Sunday Morning</span></div>
+  <h3>Potential Park - Retiro?</h3>
+  
+  <div class="meta">Retiro Park row boat</div>
+  <div class="links"><a href="https://www.esmadrid.com/en/tourist-information/parque-del-retiro" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en/tourist-info</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-11" data-status="TBD" style="border-left-color:#ea580c;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#ffedd5;color:#9a3412">TBD</span><span class="date">2026-10-11 Sunday Morning</span></div>
+  <h3>FAFO</h3>
+  
+  <div class="meta">TBD</div>
+  
+</div>
+
+<div class="card itin" data-date="2026-10-11" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-11 Sunday Night</span></div>
+  <h3>Real Madrid vs Villarreal?</h3>
+  
+  <div class="meta">Check Bernabeu date</div>
+  <div class="links"><a href="https://www.realmadrid.com/en-US/the-club/santiago-bernabeu-stadium" target="_blank" rel="noopener">🔗 https://www.realmadrid.com/en-US/the-clu</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-11" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-11 Sunday Night</span></div>
+  <h3>Free Concerts - Hispanidad</h3>
+  
+  <div class="meta">Evening concerts</div>
+  <div class="links"><a href="https://www.comunidad.madrid/hispanidad-2026" target="_blank" rel="noopener">🔗 https://www.comunidad.madrid/hispanidad-</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-11" data-status="TBD" style="border-left-color:#ea580c;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#ffedd5;color:#9a3412">TBD</span><span class="date">2026-10-11 Sunday Night</span></div>
+  <h3>Famous Orchestra Bet</h3>
+  
+  <div class="meta">TODO - Orchestra Person Performing</div>
+  <div class="links"><a href="https://ocne.inaem.gob.es/programacion/sinfonico-03" target="_blank" rel="noopener">🔗 https://ocne.inaem.gob.es/programacion/s</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-12" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-12 Monday Afternoon</span></div>
+  <h3>Prado Museum - Free Day</h3>
+  
+  <div class="meta">Spain National Day free entry</div>
+  <div class="links"><a href="https://www.museodelprado.es/en" target="_blank" rel="noopener">🔗 https://www.museodelprado.es/en</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-12" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-12 Monday Afternoon</span></div>
+  <h3>Beer Bet</h3>
+  
+  <div class="meta">Casual</div>
+  
+</div>
+
+<div class="card itin" data-date="2026-10-12" data-status="TBD" style="border-left-color:#ea580c;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#ffedd5;color:#9a3412">TBD</span><span class="date">2026-10-12 Monday Afternoon</span></div>
+  <h3>Peyman TODO: Book Food</h3>
+  
+  <div class="meta">Need restaurant booking</div>
+  
+</div>
+
+<div class="card itin" data-date="2026-10-12" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-12 Monday Morning</span></div>
+  <h3>Spain National Day Parade</h3>
+  
+  <div class="meta">Oct 12 parade - fixed</div>
+  <div class="links"><a href="https://www.esmadrid.com/en/whats-on/national-day" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en/whats-on/nat</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-12" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-12 Monday Night</span></div>
+  <h3>Clubbing? Cafe Berlin or Sala La Riviera</h3>
+  
+  <div class="meta">Spain National Day night</div>
+  <div class="links"><a href="https://www.esmadrid.com/en/nightlife" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en/nightlife</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-13" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-13 Tuesday Morning</span></div>
+  <h3>Royal Palace</h3>
+  
+  <div class="meta">TODO Sina - but palace is concrete</div>
+  <div class="links"><a href="https://www.patrimonionacional.es/en/visita/palacio-real-de-madrid" target="_blank" rel="noopener">🔗 https://www.patrimonionacional.es/en/vis</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-13" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-13 Tuesday Night</span></div>
+  <h3>SUMA FLAMENCA Opening Night</h3>
+  
+  <div class="meta">Flamenco festival opening</div>
+  <div class="links"><a href="https://www.madrid.org/clas_art/red/sumaflamenca.html" target="_blank" rel="noopener">🔗 https://www.madrid.org/clas_art/red/suma</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-13" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-13 Tuesday Night</span></div>
+  <h3>Feria de Otono Bullfight - Las Ventas</h3>
+  
+  <div class="meta">Needs de-kosification discussion</div>
+  <div class="links"><a href="https://www.toroslasventas.com/feria-de-otono/" target="_blank" rel="noopener">🔗 https://www.toroslasventas.com/feria-de-</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-14" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-14 Wednesday Afternoon</span></div>
+  <h3>Toledo Art Museums - El Greco</h3>
+  
+  <div class="meta">TODO Sina Book but museum is concrete</div>
+  <div class="links"><a href="https://www.museoelgreco.es/" target="_blank" rel="noopener">🔗 https://www.museoelgreco.es/</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-14" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-14 Wednesday Morning</span></div>
+  <h3>Toledo Day Trip</h3>
+  
+  <div class="meta">Day trip - Madrid Atocha to Toledo 30min</div>
+  <div class="links"><a href="https://www.renfe.com/es/en" target="_blank" rel="noopener">🔗 https://www.renfe.com/es/en</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-14" data-status="TBD" style="border-left-color:#ea580c;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#ffedd5;color:#9a3412">TBD</span><span class="date">2026-10-14 Wednesday Morning</span></div>
+  <h3>Book Train Tickets</h3>
+  
+  <div class="meta">TODO - book bullet train</div>
+  <div class="links"><a href="https://www.renfe.com/es/en" target="_blank" rel="noopener">🔗 https://www.renfe.com/es/en</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-15" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-15 Thursday Morning</span></div>
+  <h3>La Latina - Historic Tapas</h3>
+  
+  <div class="meta">Historic tapas area</div>
+  <div class="links"><a href="https://www.esmadrid.com/en/nightlife/la-latina" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en/nightlife/la</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-15" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-15 Thursday Morning</span></div>
+  <h3>Third Museum - Thyssen?</h3>
+  
+  <div class="meta">Third museum</div>
+  <div class="links"><a href="https://www.museothyssen.org/en" target="_blank" rel="noopener">🔗 https://www.museothyssen.org/en</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-15" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-15 Thursday Night</span></div>
+  <h3>Gran Via - Architecture/Shops/Restaurants</h3>
+  
+  <div class="meta">Great at night</div>
+  <div class="links"><a href="https://www.esmadrid.com/en/nightlife/gran-via" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en/nightlife/gr</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-15" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-15 Thursday Night</span></div>
+  <h3>Real Madrid Basketball Euroleague</h3>
+  
+  <div class="meta">Oct 15 game</div>
+  <div class="links"><a href="https://www.realmadrid.com/en-US/basketball/games/euroleague/real-madrid-ldlc-asvel-villeurbanne/15-10-2026" target="_blank" rel="noopener">🔗 https://www.realmadrid.com/en-US/basketb</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-16" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-16 Friday Afternoon</span></div>
+  <h3>Malasana + Conde Duque exploration</h3>
+  
+  <div class="meta">Shops, galleries</div>
+  <div class="links"><a href="https://www.esmadrid.com/en" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-16" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-16 Friday Morning</span></div>
+  <h3>La Latina? / Malasana + Conde Duque</h3>
+  
+  <div class="meta">Question mark - maybe</div>
+  <div class="links"><a href="https://www.esmadrid.com/en/nightlife/malasana" target="_blank" rel="noopener">🔗 https://www.esmadrid.com/en/nightlife/ma</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-16" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-16 Friday Night</span></div>
+  <h3>Spanish National Orchestra</h3>
+  
+  <div class="meta">OCNE concert - Ali like</div>
+  <div class="links"><a href="https://ocne.inaem.gob.es/programacion/sinfonico-03" target="_blank" rel="noopener">🔗 https://ocne.inaem.gob.es/programacion/s</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-16" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-16 Friday Night</span></div>
+  <h3>Alvin Ailey Dance Theater</h3>
+  
+  <div class="meta">Dance performance</div>
+  <div class="links"><a href="https://ailey.org/alvin-ailey-american-dance-theater" target="_blank" rel="noopener">🔗 https://ailey.org/alvin-ailey-american-d</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-17" data-status="Concrete" style="border-left-color:#16a34a;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#dcfce7;color:#166534">Concrete</span><span class="date">2026-10-17 Saturday Morning</span></div>
+  <h3>Check-out</h3>
+  
+  <div class="meta">11AM check-out</div>
+  <div class="links"><a href="https://www.hotels.com/ho1046985952/smartrental-collection-gran-via-centric-madrid-spain/" target="_blank" rel="noopener">🔗 https://www.hotels.com/ho1046985952/smar</a></div>
+</div>
+
+<div class="card itin" data-date="2026-10-17" data-status="Maybe" style="border-left-color:#ca8a04;background:#fff">
+  <div class="it-head"><span class="badge" style="background:#fef9c3;color:#854d0e">Maybe</span><span class="date">2026-10-17 Saturday Night</span></div>
+  <h3>Real Madrid vs Sevilla?</h3>
+  
+  <div class="meta">Maybe game - check date</div>
+  <div class="links"><a href="https://www.realmadrid.com/en-US" target="_blank" rel="noopener">🔗 https://www.realmadrid.com/en-US</a></div>
+</div></div>
+  </div>
+  <div id="pane-hotel" style="display:none">
+<div class="card" style="border-left-color:#16a34a;background:#dcfce7">
+  <h3>🏨 Smartrental Collection Gran Via Centric</h3>
+  <div class="meta">42 Calle Gran Vía, 28013 Madrid • 2026-10-10 → 2026-10-17</div>
+  <div class="links"><a href="https://www.booking.com/hotel/es/smartrental-collection-gran-via-centric.html" target="_blank">Booking #5646283231 PIN 0395</a> <a href="https://www.google.com/maps/search/?api=1&amp;query=Smartrental%20Collection%20Gran%20Via%20Centric%20Madrid" target="_blank">📍 Maps</a></div>
+</div><div class="card" style="border-left-color:#2563eb"><div class="meta">Booking.com Conf #5646283231 PIN 0395 • 42 Calle Gran Vía 28013 • Oct 10 3PM → Oct 17 11AM • €2,292.64 • One-Bedroom for 3</div></div></div>
+</div>
+<div id="toast"></div>
 <script>
-const bars = [{"name": "Salmon Guru", "address": "Calle de Echegaray 21, Centro 28014, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Salmon+Guru+Calle+de+Echegaray+21+Madrid", "website": "https://salmonguru.es", "website_label": "salmonguru.es \u2014 4.6/660 reviews", "hours": "Sun-Thu 4pm-2am, Fri-Sat 4pm-2:30am", "reservation_info": "Walk-ins welcome \u2014 no reservations. Max 6 people. Arrive early Fri/Sat. Highly recommended early 7-8pm.", "price_range": "~12\u20ac cocktails \u2014 4.6/660 reviews", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden", "Good Vibes"], "why": "World's 50 Best Bars #23 in 2024. Maximalist comic-book chapel vibe \u2014 neon saints, irreverent menu Fruity to WTF?, signature La Mano de Dios. The one everyone talks about."}, {"name": "Angelita Madrid", "address": "Calle de la Reina 4, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Angelita+Madrid+Calle+de+la+Reina+4", "website": "https://madrid-angelita.es", "website_label": "madrid-angelita.es \u2014 4.5/608", "hours": "Mon-Fri 17:30-02:00/02:30 (bar). Dining closed Sat Sun", "reservation_info": "Bar area does NOT take bookings \u2014 walk-in only. Dining DOES via OpenTable \u2014 booking essential.", "price_range": "~13-14\u20ac cocktails \u2014 4.5/608", "vibe_tags": ["Unique Cocktail", "Good Vibes / Vermouth", "Classic Madrid"], "why": "Best cocktail bar in Spain FIBAR 2021, World's 50 Best #65 2024. No ice / no citrus sustainable cocktails, wine bar 2000+ bottles."}, {"name": "1862 Dry Bar", "address": "Calle del Pez 27, Malasa\u00f1a, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=1862+Dry+Bar+Calle+del+Pez+27+Madrid", "website": "https://1862drybar.com", "website_label": "1862drybar.com \u2014 4.7/297", "hours": "Daily 3:30pm-2am", "reservation_info": "Walk-ins welcome \u2014 no reservations required. Small room, arrive early Fri/Sat.", "price_range": "~12-14\u20ac \u2014 4.7/297, 4.6/1200 Google", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden", "Classic Madrid"], "why": "Classic speakeasy in 1862 palace. 150+ brands, pure classic cocktail focus."}, {"name": "Macera Taller Bar", "address": "Calle de San Mateo 21, 28004 Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Macera+Taller+Bar+Calle+de+San+Mateo+21+Madrid", "website": "https://macera.es", "website_label": "macera.es \u2014 4.8 highly rated", "hours": "Tue-Sun 7pm-2am", "reservation_info": "Walk-ins welcome, reservations recommended Fri/Sat via website/IG.", "price_range": "~12-13\u20ac \u2014 4.8 rating", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden", "Good Vibes"], "why": "House-infused rums/gins, constantly evolving menu, industrial chic."}, {"name": "Incl\u00e1n Brutal Bar", "address": "Calle de \u00c1lvarez Gato 4, Barrio de las Letras, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Inclan+Brutal+Bar+Madrid", "website": "https://inclanbrutalbar.com", "website_label": "inclanbrutalbar.com \u2014 4.7/19872", "hours": "Daily 7pm-2:30am", "reservation_info": "Walk-ins only \u2014 no reservation. Arrive early, gets busy after 11pm.", "price_range": "~12\u20ac \u2014 4.7/19872", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden", "Good Vibes"], "why": "Drinks served in mini bathtubs, skulls, bird cages. Avant-garde, theatrical."}, {"name": "Del Diego Cocktail Bar", "address": "Calle de la Reina 12, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Del+Diego+Cocktail+Bar+Calle+de+la+Reina+12+Madrid", "website": "https://www.esmadrid.com/en/nightlife/del-diego", "website_label": "esmadrid.com/del-diego", "hours": "Mon-Thu 7pm-3am, Fri-Sat 7pm-3:30am, closed Sun", "reservation_info": "Walk-ins \u2014 no reservation. NY-style since 1990.", "price_range": "~13\u20ac cocktails", "vibe_tags": ["Unique Cocktail", "Classic Madrid", "Good Vibes"], "why": "NY-style since 1990, wood-paneled award-winning interior. Old-school classic."}, {"name": "Teatro Kapital", "address": "Calle de Atocha 125, Madrid \u2014 7 floors", "maps_link": "https://www.google.com/maps/search/?api=1&query=Teatro+Kapital+Calle+de+Atocha+125+Madrid", "website": "https://teatrokapital.com", "website_label": "teatrokapital.com \u2014 4.44/7454", "hours": "11pm-6am (Thu-Sat peak)", "reservation_info": "Tickets via Fever / website. General admission +2 drinks before 1am 1 after. Dress code smart elegant. Phone +34 914202906.", "price_range": "~20-25\u20ac entry incl. drinks \u2014 4.44/7454", "vibe_tags": ["Late Night Dance", "Good Vibes", "Unique Cocktail"], "why": "Madrid's high temple of hedonism \u2014 7 floors different music (R&B, salsa, house)."}, {"name": "Mondo Disko", "address": "Calle de Hern\u00e1n Cort\u00e9s, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Mondo+Disko+Madrid", "website": "https://mondodisko.es", "website_label": "mondodisko.es \u2014 techno institution", "hours": "Fri-Sat 11:30pm-6am", "reservation_info": "Tickets at door or via Dice / Resident Advisor. Usually \u20ac10-20 entry.", "price_range": "~12-20\u20ac entry", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Small dark house/techno institution, local DJs, best sound system."}, {"name": "Marula Caf\u00e9", "address": "Calle Ca\u00f1os Viejos 3, La Latina, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Marula+Cafe+Madrid", "website": "https://www.marulacafe.com", "website_label": "marulacafe.com \u2014 funk/soul", "hours": "Daily 11pm-5am, live band early then DJs", "reservation_info": "No reservation \u2014 walk-in. Free before midnight usually.", "price_range": "~10-12\u20ac cocktails, free before 12am", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Funk / soul / disco, live band early then DJs. Friendly dance floor."}, {"name": "Caf\u00e9 Berl\u00edn", "address": "Costanilla de los \u00c1ngeles 20, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Cafe+Berlin+Costanilla+de+los+Angeles+20+Madrid", "website": "https://berlincafe.es", "website_label": "berlincafe.es \u2014 4.4/14", "hours": "Tue-Sun 8pm-3am (live jazz 9pm-12am, club after)", "reservation_info": "Tickets for live shows via website. Otherwise walk-in.", "price_range": "~10-15\u20ac entry / cocktails \u2014 4.4/14", "vibe_tags": ["Late Night Dance", "Good Vibes", "Classic Madrid"], "why": "Live jazz / world music till midnight, then dance club. Best culture + late night combo."}, {"name": "Planet Club", "address": "Calle del Pr\u00edncipe 20, Madrid (near Sol)", "maps_link": "https://www.google.com/maps/search/?api=1&query=Planet+Club+Calle+del+Principe+20+Madrid", "website": "https://www.instagram.com/planetclubmadrid/", "website_label": "Instagram @planetclubmadrid", "hours": "Sun-Thu 8pm-3am, Fri-Sat 8pm-3:30am", "reservation_info": "No reservation \u2014 walk-in. Neon 365 days. Cover ~\u20ac10 with drink.", "price_range": "~10\u20ac entry incl. drink", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Neon-drenched, 365 days high-energy crowds. Right by Sol station."}, {"name": "Rosi La Loca", "address": "Calle de C\u00e1diz 4, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Rosi+La+Loca+Calle+de+Cadiz+4+Madrid", "website": "https://rosilaloca.com", "website_label": "rosilaloca.com \u2014 4.7/24095", "hours": "Daily 1pm-2am", "reservation_info": "Reservations via website \u2014 recommended.", "price_range": "~13\u20ac cocktails \u2014 4.7/24095", "vibe_tags": ["Unique Cocktail", "Good Vibes"], "why": "Gastropub, inventive cocktails in standout glassware. Maximalist decor."}, {"name": "Azotea del C\u00edrculo", "address": "C. del Marqu\u00e9s de Casa Riera 2, Centro \u2014 C\u00edrculo de Bellas Artes rooftop", "maps_link": "https://www.google.com/maps/search/?api=1&query=Azotea+del+Circulo+Madrid", "website": "https://circulobellasartes.com/azotea/", "website_label": "circulobellasartes.com \u2014 4.2/10704", "hours": "Daily 10am-1am (rooftop sunset prime 8-11pm)", "reservation_info": "No reservation for rooftop \u2014 entry \u20ac4-5 to building.", "price_range": "~12-14\u20ac cocktails \u2014 4.2/10704", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "360-degree skyline from Bellas Artes rooftop. Craft cocktails, live beats."}, {"name": "Azotea Cibeles", "address": "Plaza Cibeles 1, 6th floor \u2014 Palacio de Cibeles", "maps_link": "https://www.google.com/maps/search/?api=1&query=Azotea+Cibeles+Plaza+Cibeles+1+Madrid", "website": "https://azoteacibeles.com", "website_label": "azoteacibeles.com \u2014 4.1/9475", "hours": "Daily 11am-1am", "reservation_info": "Reservations recommended via website.", "price_range": "~13\u20ac cocktails \u2014 4.1/9475", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "Rooftop cocktails with Cibeles Palace view."}, {"name": "Bad Company 1920", "address": "Calle Miguel Moya 8, near Callao, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Bad+Company+1920+Calle+Miguel+Moya+8+Madrid", "website": "https://badcompany1920.com", "website_label": "badcompany1920.com \u2014 speakeasy", "hours": "Tue-Sun 7pm-2:30am", "reservation_info": "Reservations via website/IG. Hidden door.", "price_range": "~13\u20ac cocktails", "vibe_tags": ["Speakeasy / Hidden", "Unique Cocktail"], "why": "1920s speakeasy near Callao, cocktail-led. Hidden entrance."}, {"name": "Devil's Cut", "address": "Calle del Le\u00f3n 3, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Devils+Cut+Calle+del+Leon+3+Madrid", "website": "https://www.esmadrid.com/en/nightlife/devils-cut", "website_label": "esmadrid.com \u2014 40-year rejuvenated", "hours": "Daily 6pm-2am", "reservation_info": "Walk-ins, reservations for groups.", "price_range": "~12\u20ac cocktails", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden"], "why": "40-year-old bar rejuvenated \u2014 Japanese techniques + NY cocktail + sherry bar."}, {"name": "Museo Chicote", "address": "Gran V\u00eda 12, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Museo+Chicote+Gran+Via+12+Madrid", "website": "https://museo-chicote.com", "website_label": "museo-chicote.com \u2014 4.5 rating", "hours": "Daily 6pm-3am", "reservation_info": "Walk-ins \u2014 historic 1931, no reservation needed.", "price_range": "~14\u20ac cocktails \u2014 4.5 rating", "vibe_tags": ["Classic Madrid", "Unique Cocktail"], "why": "Historic 1931 \u2014 classic Madrid, Hemingway's bar."}, {"name": "La Venencia", "address": "Calle Echegaray 7, Barrio de las Letras, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=La+Venencia+Calle+Echegaray+7+Madrid", "website": "https://www.esmadrid.com/en/nightlife/la-venencia", "website_label": "sherry-only dive \u2014 4.7 rating", "hours": "Daily 12:30-3:30pm, 7:30pm-12am", "reservation_info": "No reservation \u2014 sherry-only dive since 1920s.", "price_range": "~4-6\u20ac sherry \u2014 4.7 rating", "vibe_tags": ["Classic Madrid", "Good Vibes / Vermouth"], "why": "Sherry-only dive since 1920s, no music, dusty bottles, manzanilla."}, {"name": "Casa Camacho", "address": "Calle de San Andr\u00e9s 4, Malasa\u00f1a, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Casa+Camacho+Calle+de+San+Andres+4+Madrid", "website": "https://www.esmadrid.com/en/nightlife/casa-camacho", "website_label": "vermouth legend \u2014 cheap", "hours": "Daily 12pm-2am", "reservation_info": "No reservation \u2014 vermouth bar, cross-generational.", "price_range": "~3-5\u20ac vermouth + Yayo \u2014 cheap", "vibe_tags": ["Good Vibes / Vermouth", "Classic Madrid"], "why": "Vermouth + Yayo (vermouth, gin, lemonade), cross-generational, cheap."}, {"name": "Gilda Haus", "address": "Calle de Recoletos 13, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Gilda+Haus+Madrid", "website": "https://www.instagram.com/gildahausmadrid/", "website_label": "Instagram @gildahausmadrid", "hours": "Tue-Sat 7pm-2am", "reservation_info": "Walk-ins \u2014 bar + nightclub between.", "price_range": "~10-12\u20ac \u2014 vermouth & Garibaldi Spritz", "vibe_tags": ["Good Vibes / Vermouth", "Late Night Dance"], "why": "Bar + nightclub between, orange curtains, gildas, classic house under disco ball."}, {"name": "360\u00ba Rooftop Bar \u2014 Hotel Riu Plaza Espa\u00f1a", "address": "Hotel Riu Plaza Espa\u00f1a 27th floor, Gran V\u00eda 84, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=360+Rooftop+Bar+Hotel+Riu+Madrid", "website": "https://www.riu.com/en/hotel/riu-plaza-espana/", "website_label": "riu.com \u2014 5.0 rating, highest rooftop", "hours": "Daily 12pm-2am", "reservation_info": "Reservations via hotel website \u2014 highest rooftop, 360 views. Sunset sells out.", "price_range": "~15\u20ac cocktails \u2014 5.0 rating", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "Highest rooftop in Madrid, 27th floor, 360 views."}, {"name": "SALA EQUIS", "address": "Calle Duque de Alba 4, La Latina, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=SALA+EQUIS+Calle+Duque+de+Alba+4+Madrid", "website": "https://salaequis.com", "website_label": "salaequis.com \u2014 5.0 rating", "hours": "Daily 12pm-1am", "reservation_info": "No reservation \u2014 cinema bar, former erotic cinema.", "price_range": "~10\u20ac cocktails \u2014 5.0 rating", "vibe_tags": ["Unique Cocktail", "Good Vibes"], "why": "Cinema bar \u2014 former erotic cinema, cocktails + films."}, {"name": "Picalagartos Sky Bar", "address": "Gran V\u00eda 21, 9th floor \u2014 Hotel Santo Mauro / NH", "maps_link": "https://www.google.com/maps/search/?api=1&query=Picalagartos+Sky+Bar+Gran+Via+21+Madrid", "website": "https://picalagartos.com", "website_label": "picalagartos.com \u2014 360 views", "hours": "Daily 1pm-1am", "reservation_info": "Reservations recommended \u2014 360 views, bohemian vibe.", "price_range": "~13\u20ac cocktails", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "360 views, bohemian vibe, Luca Anastasio cocktails."}, {"name": "Casa Suecia", "address": "Calle Marqu\u00e9s de Casa Riera 4, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Casa+Suecia+Madrid", "website": "https://casasuecia.es", "website_label": "casasuecia.es \u2014 rooftop + speakeasy", "hours": "Sat-Wed 8am-2am, Thu-Fri till 3:30am", "reservation_info": "No reservations \u2014 rooftop + speakeasy, 360 view.", "price_range": "~12\u20ac cocktails", "vibe_tags": ["Rooftop", "Speakeasy / Hidden"], "why": "Rooftop + speakeasy, 360 view Cibeles/Retiro."}, {"name": "\u00c1tico 11 \u2014 Iberostar Las Letras Gran Via", "address": "Gran V\u00eda 11, 6th floor, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Atico+11+Iberostar+Las+Letras+Gran+Via+11+Madrid", "website": "https://www.iberostar.com/en/hotel/iberostar-las-letras-gran-via/", "website_label": "iberostar.com \u2014 verdant rooftop garden", "hours": "Daily 5pm-1am", "reservation_info": "Reservations recommended \u2014 verdant rooftop garden, refined.", "price_range": "~13\u20ac \u2014 gin & tonics & mojitos", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "Verdant rooftop garden, refined, gin & tonics & mojitos."}, {"name": "Fat Cats Cocktail House", "address": "Calle de la Palma 4, Cortes, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Fat+Cats+Cocktail+House+Madrid", "website": "https://www.instagram.com/fatcatsmadrid/", "website_label": "Instagram @fatcatsmadrid \u2014 4.3/58", "hours": "Wed-Sun 7pm-2am", "reservation_info": "Reservations via IG/website. 70s Palm Beach mansion vibe.", "price_range": "~13\u20ac \u2014 4.3/58", "vibe_tags": ["Speakeasy / Hidden", "Unique Cocktail"], "why": "70s Palm Beach mansion vibe, spirit-forward cocktails, speakeasy."}, {"name": "Savas Bar", "address": "Calle del Esp\u00edritu Santo 11, Malasa\u00f1a, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Savas+Bar+Madrid", "website": "https://www.google.com/search?q=Savas+Bar+Madrid", "website_label": "5.0/2 reviews \u2014 cozy", "hours": "Daily 6pm-2am", "reservation_info": "Walk-ins \u2014 cozy, lovely service.", "price_range": "~10\u20ac \u2014 5.0/2", "vibe_tags": ["Good Vibes", "Unique Cocktail"], "why": "Cozy, lovely service, central location cozy evening."}, {"name": "La Terraza de \u00d3scar \u2014 Room Mate \u00d3scar", "address": "Plaza Pedro Zerolo 12, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=La+Terraza+de+Oscar+Plaza+Pedro+Zerolo+12+Madrid", "website": "https://room-matehotels.com/en/oscar/", "website_label": "room-matehotels.com/oscar", "hours": "Mon-Fri 4:30-11pm, Sat-Sun 3-11pm", "reservation_info": "Reservations recommended \u2014 designer rooftop.", "price_range": "~12\u20ac cocktails", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "Designer rooftop above Chueca, pool vibe, great for sunset."}, {"name": "El Tigre Sidra Bar", "address": "Calle Infantas 23, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=El+Tigre+Sidra+Bar+Calle+Infantas+23+Madrid", "website": "https://www.esmadrid.com/en/nightlife/el-tigre-sidra-bar", "website_label": "esmadrid.com \u2014 4.2/26113", "hours": "Daily 12pm-1am", "reservation_info": "No reservation \u2014 sidra pours endless free tapas. Rowdiest generous ritual.", "price_range": "~5\u20ac sidra + free tapas \u2014 4.2/26113", "vibe_tags": ["Classic Madrid", "Good Vibes"], "why": "Sidra pours endless free tapas \u2014 rowdiest generous ritual."}, {"name": "Thompson Madrid Rooftop", "address": "Calle de Montera 24, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Thompson+Madrid+Rooftop+Calle+de+Montera+24", "website": "https://www.thompsonhotels.com/madrid/rooftop", "website_label": "thompsonhotels.com \u2014 rooftop", "hours": "Daily 12pm-2am", "reservation_info": "Reservations via hotel \u2014 rooftop with Gran V\u00eda views.", "price_range": "~14\u20ac cocktails", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "New design hotel rooftop, Gran V\u00eda views, refined cocktails."}, {"name": "Goya Social Club", "address": "Calle de Goya 43, Salamanca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Goya+Social+Club+Calle+de+Goya+43+Madrid", "website": "https://goyasocialclub.com", "website_label": "goyasocialclub.com \u2014 club", "hours": "Fri-Sat 11pm-6am", "reservation_info": "Tickets via Resident Advisor / website.", "price_range": "~15-20\u20ac entry", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Madrid underground staple \u2014 house/techno, no frills."}, {"name": "Panda Club Madrid", "address": "Calle de Recoletos 2, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Panda+Club+Madrid+Calle+de+Recoletos+2", "website": "https://www.instagram.com/pandaclubmadrid/", "website_label": "Instagram @pandaclubmadrid \u2014 5.0/5", "hours": "Fri-Sat 11pm-5am", "reservation_info": "Reservations via IG \u2014 small club, intimate.", "price_range": "~12\u20ac entry \u2014 5.0/5", "vibe_tags": ["Late Night Dance", "Speakeasy / Hidden"], "why": "Small intimate club, great sound, 5.0/5 rating."}, {"name": "ThunderCat Club", "address": "Calle Campoamor 11, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=ThunderCat+Club+Calle+Campoamor+11+Madrid", "website": "https://www.google.com/search?q=ThunderCat+Club+Madrid", "website_label": "3.9/27 \u2014 great music interior 11\u20ac with drink", "hours": "Thu-Sat 11pm-5am", "reservation_info": "Walk-in \u2014 great music interior, 11\u20ac with drink.", "price_range": "~11\u20ac with drink \u2014 3.9/27", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Great music interior, 11\u20ac with drink. Rock / indie crossover."}, {"name": "ICON Madrid", "address": "Calle de Toledo 16, La Latina, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=ICON+Madrid+Calle+de+Toledo+16", "website": "https://www.esmadrid.com/en/nightlife/icon-madrid", "website_label": "esmadrid.com/icon-madrid \u2014 always fun", "hours": "Fri-Sat 11pm-6am", "reservation_info": "Tickets via Fever \u2014 always fun.", "price_range": "~15\u20ac entry", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Always fun, big dance club, tourist-friendly but energetic."}, {"name": "Tropical House", "address": "Calle de Santa Ana 4, La Latina, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Tropical+House+Calle+de+Santa+Ana+4+Madrid", "website": "https://www.google.com/search?q=Tropical+House+Madrid", "website_label": "3.8/9 \u2014 friendly will ask to dance", "hours": "Thu-Sat 10pm-4am", "reservation_info": "Walk-in \u2014 friendly will ask to dance, affordable drinks.", "price_range": "~8\u20ac drinks \u2014 3.8/9", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Friendly will ask to dance, affordable drinks, places to sit, DJ great music."}, {"name": "Sala El Sol", "address": "Calle Jardines 3, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Sala+El+Sol+Calle+Jardines+3+Madrid", "website": "https://salaelsol.com", "website_label": "salaelsol.com \u2014 3.6/14", "hours": "Wed-Sat 9pm-5am", "reservation_info": "Tickets via website \u2014 friendly staff clean restrooms nice space.", "price_range": "~10-12\u20ac entry \u2014 3.6/14", "vibe_tags": ["Late Night Dance", "Classic Madrid"], "why": "Friendly staff clean restrooms nice space. Historic concert hall turned late club."}];
-const vibes = ["All","Unique Cocktail","Rooftop","Speakeasy / Hidden","Late Night Dance","Good Vibes","Good Vibes / Vermouth","Classic Madrid"];
-let activeVibe="All";
-function colorFor(vibesArr){
-  if(vibesArr.includes("Unique Cocktail")) return "#16a34a";
-  if(vibesArr.includes("Rooftop")) return "#2563eb";
-  if(vibesArr.includes("Speakeasy / Hidden")) return "#9333ea";
-  if(vibesArr.includes("Late Night Dance")) return "#db2777";
-  if(vibesArr.includes("Good Vibes / Vermouth")) return "#d97706";
-  if(vibesArr.includes("Classic Madrid")) return "#ea580c";
-  return "#16a34a";
+const ACTIONS_URL="https://madrid-trip-october-2026-2.hatch.space/actions";
+const VOTER_KEY="madrid_voter_id_v1";
+function getVoter(){
+  try{let id=localStorage.getItem(VOTER_KEY); if(id&&id.length>=8) return id; id='v_'+Math.random().toString(36).slice(2,10)+'_'+Date.now().toString(36); localStorage.setItem(VOTER_KEY,id); return id;}catch{} return 'v_'+Math.random().toString(36).slice(2,10);
 }
-function renderFilters(){
-  const c=document.getElementById('vibe-filters');
-  c.innerHTML="";
-  vibes.forEach(v=>{
-    const b=document.createElement('button');
-    b.className='chip'+(activeVibe===v?' active':'');
-    b.textContent=v;
-    b.onclick=()=>{activeVibe=v; renderFilters(); renderBars();};
-    c.appendChild(b);
-  });
+function toast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2500);}
+async function voteBar(barId,type,btn){
+  const voterId=getVoter();
+  btn.disabled=true;
+  try{
+    const res=await fetch(ACTIONS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'voteBar',args:{barId,type,voterId}}),mode:'cors'});
+    if(!res.ok) throw new Error('vote failed '+res.status);
+    const data=await res.json();
+    const result=data.result||data;
+    // update counts in card
+    const card=document.querySelector(`[data-bar-id="{}"]`.replace('{}',barId));
+    if(card){ 
+      const upBtn=card.querySelector('.vote-btn.up .vc'); const downBtn=card.querySelector('.vote-btn.down .vc');
+      if(upBtn) upBtn.textContent=result.up??0; if(downBtn) downBtn.textContent=result.down??0;
+      card.querySelectorAll('.vote-btn').forEach(b=>b.classList.remove('active'));
+      if(result.userVote==='up') card.querySelector('.vote-btn.up')?.classList.add('active');
+      if(result.userVote==='down') card.querySelector('.vote-btn.down')?.classList.add('active');
+    }
+    toast(result.message|| (type==='up'?'👍 counted':'👎 counted'));
+  }catch(e){toast('Vote failed - try again'); console.error(e);}finally{btn.disabled=false;}
 }
-function isWalkIn(b){return /walk-in/i.test(b.reservation_info);}
-function renderBars(){
-  const q=(document.getElementById('bar-search').value||"").toLowerCase();
-  const list=document.getElementById('bars-list');
-  list.innerHTML="";
-  bars.filter(b=>{
-    if(activeVibe!=="All" && !b.vibe_tags.includes(activeVibe)) return false;
-    if(q && !(b.name.toLowerCase().includes(q) || b.why.toLowerCase().includes(q) || b.vibe_tags.join(' ').toLowerCase().includes(q) || b.reservation_info.toLowerCase().includes(q) || b.address.toLowerCase().includes(q))) return false;
-    return true;
-  }).forEach(b=>{
-    const card=document.createElement('div');
-    card.className='card';
-    card.style.borderLeftColor=colorFor(b.vibe_tags);
-    const walk=isWalkIn(b);
-    card.innerHTML=`
-      <h3>${b.name} <span class="badge ${walk?'res-walk':'res-need'}">${walk?'✓ Walk-in':'⚑ Reservation'}</span></h3>
-      <div class="meta">${b.address} • ${b.hours} • ${b.price_range}</div>
-      <div class="tags">${b.vibe_tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-      <div class="why"><b>Why:</b> ${b.why}</div>
-      <div class="meta" style="margin-top:6px"><b>Reserve:</b> ${b.reservation_info}</div>
-      <div class="btns">
-        <a class="btn primary" href="${b.maps_link}" target="_blank">Maps</a>
-        <a class="btn" href="${b.website}" target="_blank">${b.website_label}</a>
-        <a class="btn" href="https://www.google.com/search?q=${encodeURIComponent(b.name+' Madrid google reviews')}" target="_blank">Google Reviews</a>
-      </div>
-    `;
-    list.appendChild(card);
-  });
-}
-document.getElementById('bar-search').addEventListener('input', renderBars);
-document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click', (e)=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  e.target.classList.add('active');
-  const tab=e.target.dataset.tab;
-  document.getElementById('bars-pane').style.display=tab==='bars'?'block':'none';
-  document.getElementById('itinerary-pane').style.display=tab==='itinerary'?'block':'none';
-  document.getElementById('hotel-pane').style.display=tab==='hotel'?'block':'none';
+// tabs
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
+  document.getElementById('pane-bars').style.display=t.dataset.tab==='bars'?'block':'none';
+  document.getElementById('pane-itinerary').style.display=t.dataset.tab==='itinerary'?'block':'none';
+  document.getElementById('pane-hotel').style.display=t.dataset.tab==='hotel'?'block':'none';
 }));
-renderFilters(); renderBars();
+// bar filters
+document.querySelectorAll('#bar-filters .chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#bar-filters .chip').forEach(x=>x.classList.remove('active')); c.classList.add('active');
+  const f=c.dataset.f.toLowerCase(); document.querySelectorAll('#bars-list .card').forEach(card=>{
+    const vibes=card.dataset.vibes||''; const name=card.dataset.name||''; const search=(document.getElementById('bar-search').value||'').toLowerCase();
+    const matchFilter=f==='all'||vibes.includes(f); const matchSearch=!search||name.includes(search)||card.textContent.toLowerCase().includes(search);
+    card.style.display= (matchFilter&&matchSearch)?'block':'none';
+  });
+}));
+document.getElementById('bar-search').addEventListener('input',e=>{
+  const search=e.target.value.toLowerCase(); const active=document.querySelector('#bar-filters .chip.active')?.dataset.f.toLowerCase()||'all';
+  document.querySelectorAll('#bars-list .card').forEach(card=>{
+    const vibes=card.dataset.vibes||''; const name=card.dataset.name||'';
+    const mf=active==='all'||vibes.includes(active); const ms=!search||name.includes(search)||card.textContent.toLowerCase().includes(search);
+    card.style.display= (mf&&ms)?'block':'none';
+  });
+});
+// itinerary filters
+document.querySelectorAll('#it-filters .chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#it-filters .chip').forEach(x=>x.classList.remove('active')); c.classList.add('active');
+  const f=c.dataset.f; document.querySelectorAll('#it-list .card').forEach(card=>{
+    const st=card.dataset.status||''; card.style.display=(f==='All'||st===f)?'block':'none';
+  });
+}));
+// restore votes highlight on load
+(async()=>{try{
+  const voterId=getVoter(); const r=await fetch(ACTIONS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'getBarVotes',args:{voterId}}),mode:'cors'});
+  const d=await r.json(); const votes=(d.result||d).votes||[];
+  votes.forEach(v=>{const card=document.querySelector(`[data-bar-id="${v.barId}"]`); if(!card) return; if(v.userVote==='up') card.querySelector('.vote-btn.up')?.classList.add('active'); if(v.userVote==='down') card.querySelector('.vote-btn.down')?.classList.add('active'); const up=card.querySelector('.vote-btn.up .vc'); const down=card.querySelector('.vote-btn.down .vc'); if(up) up.textContent=v.up; if(down) down.textContent=v.down;});
+}catch(e){}})();
 </script>
 </body>
 </html>
