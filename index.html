@@ -1,570 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Madrid Oct 10-16 2026 — Interactive</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>Madrid Oct 10-17 — Bars + Itinerary</title>
 <style>
-:root{ --bg:#fdf8f0; --ink:#1f1a17; --muted:#8a7d76; }
-*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-.header{position:sticky;top:0;z-index:20;background:#fdf8f0cc;backdrop-filter:blur(12px);border-bottom:1px solid #ece6df;padding:14px 16px}
-.h-title{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin:0}
-.h-sub{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
-.filters{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.filters::-webkit-scrollbar{display:none}
-.chip{white-space:nowrap;padding:8px 14px;border-radius:999px;border:1px solid #e7ddd3;background:#fff;font-size:13px;font-weight:600;cursor:pointer;flex:0 0 auto}
-.chip.active{background:#1f1a17;color:#fff;border-color:#1f1a17}
-.chip .count{opacity:.6;font-weight:500;margin-left:4px}
-.legend{display:flex;gap:8px;padding:0 16px 12px;font-size:11px;color:var(--muted);flex-wrap:wrap}
-.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
-.cards{padding:0 12px 120px;display:flex;flex-direction:column;gap:10px;max-width:720px;margin:0 auto}
-.card{border:1px solid #e8ddd2;border-radius:14px;padding:12px 14px;background:#fff;box-shadow:0 1px 0 #00000008;transition:transform .12s,opacity .12s}
-.card.dragging{opacity:.4;transform:scale(.98)}
-.card.drag-over{outline:2px dashed #1f1a17;outline-offset:2px}
-.card-head{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--muted);flex-wrap:wrap}
-.badge{padding:2px 8px;border-radius:999px;font-weight:700;font-size:11px}
-.time{margin-left:auto}
-.drag{cursor:grab;font-size:11px;opacity:.5}
-.title{font-weight:750;font-size:15px;margin:8px 0 4px;line-height:1.3}
-.loc{font-size:12px;color:#6b5f58;margin:2px 0}
-.notes{font-size:12px;color:#5a504a;background:#ffffffaa;padding:6px 8px;border-radius:8px;margin:6px 0;line-height:1.35}
-.links{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
-.link-chip{font-size:11px;padding:4px 8px;border-radius:999px;background:#fff;border:1px solid #ddd1c7;text-decoration:none;color:#3a332f}
-.nolink{font-size:11px;color:#a89e97}
-.hotel-banner{margin:12px 16px;padding:12px 14px;border-radius:14px;background:#dcfce7;border:1px solid #86efac;display:flex;gap:10px;align-items:flex-start;max-width:720px;margin-left:auto;margin-right:auto}
-.hotel-banner .icon{font-size:20px}
-.chat-fab{position:fixed;bottom:20px;right:16px;z-index:30;width:56px;height:56px;border-radius:50%;background:#1f1a17;color:#fff;border:0;font-size:22px;box-shadow:0 8px 24px #0003;cursor:pointer}
-.chat-panel{position:fixed;bottom:86px;right:12px;left:12px;max-width:420px;margin-left:auto;z-index:30;background:#fff;border:1px solid #e5ddd4;border-radius:16px;box-shadow:0 16px 48px #0002;display:none;max-height:70vh;flex-direction:column;overflow:hidden}
-.chat-panel.open{display:flex}
-.chat-head{padding:12px 14px;border-bottom:1px solid #eee;font-weight:700;display:flex;justify-content:space-between;align-items:center}
-.chat-list{overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px;max-height:280px}
-.prompt-item{padding:8px 10px;background:#fdf6ef;border:1px solid #f0e6dc;border-radius:10px;font-size:13px}
-.prompt-meta{font-size:11px;color:#8a7d76;margin-bottom:2px}
-.chat-input-row{padding:10px;border-top:1px solid #eee;display:flex;gap:8px}
-.chat-input-row input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #ddd1c7;font-size:14px}
-.btn{padding:10px 14px;border-radius:10px;border:0;background:#1f1a17;color:#fff;font-weight:600;cursor:pointer}
-.btn:disabled{opacity:.5}
-.pass-wrap{padding:16px}
-.pass-wrap input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd1c7;margin:8px 0}
-@media(min-width:720px){ .cards{padding:0 16px 120px} }
+:root{--bg:#fafaf8;--card:#ffffff;--ink:#111;--muted:#666;--border:#e8e2d9;--green:#dcfce7;--green-b:#16a34a;--yellow:#fef9c3;--yellow-b:#ca8a04;--orange:#ffedd5;--orange-b:#ea580c;--blue:#dbeafe;--blue-b:#2563eb;--purple:#f3e8ff;--purple-b:#9333ea;--pink:#fce7f3;--pink-b:#db2777;--amber:#fef3c7;--amber-b:#d97706}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:12px}
+.header{padding:18px 4px 10px}h1{margin:0;font-size:26px;letter-spacing:-0.02em} .sub{color:var(--muted);font-size:13px;margin-top:4px}
+.tabs{display:flex;gap:8px;padding:8px 0;overflow-x:auto;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--border)}
+.tab{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:13px;white-space:nowrap;cursor:pointer} .tab.active{background:#111;color:#fff;border-color:#111}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0} .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12px;cursor:pointer} .chip.active{background:#111;color:#fff}
+.search{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);font-size:14px;margin:8px 0}
+.card{background:var(--card);border:1px solid var(--border);border-left-width:4px;border-radius:12px;padding:12px;margin:10px 0;box-shadow:0 1px 0 rgba(0,0,0,0.02)}
+.card h3{margin:0 0 4px;font-size:15px} .meta{font-size:12px;color:var(--muted)} .tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0} .tag{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid var(--border);background:#fafafa}
+.btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px} .btn{font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:#fff;text-decoration:none;color:var(--ink);display:inline-block} .btn.primary{background:#111;color:#fff;border-color:#111}
+.why{font-size:13px;margin-top:6px} .badge{display:inline-block;font-size:11px;padding:2px 6px;border-radius:6px;border:1px solid var(--border);margin-left:6px}
+.res-walk{background:#dcfce7;border-color:#bbf7d0;color:#065f46} .res-need{background:#fef3c7;border-color:#fde68a;color:#92400e}
 </style>
 </head>
 <body>
-<div class="header">
-  <div class="h-title">Madrid — interactive calendar</div>
-  <div class="h-sub">Oct 10–16 2026 • 34 separate cards • Concrete green • Maybe yellow • TBD orange • Source: Madrid Mastermind Reunion sheet — read-only. Drag to reorder. Hotel Smartrental Gran Via Centric #5646283231 concrete/green.</div>
+<div class="wrap">
+<div class="header"><h1>Madrid — Oct 10-17</h1><div class="sub">Smartrental Gran Vía • 36 bars well-researched + 34 itinerary cards</div></div>
+<div class="tabs"><button class="tab active" data-tab="bars">Bars (36)</button><button class="tab" data-tab="itinerary">Itinerary</button><button class="tab" data-tab="hotel">Hotel</button></div>
+
+<div id="bars-pane">
+<div class="filters" id="vibe-filters"></div>
+<input id="bar-search" class="search" placeholder="Search bars, vibe, reservation, why special…"/>
+<div id="bars-list"></div>
 </div>
 
-<div class="hotel-banner">
-  <div class="icon">🏨</div>
-  <div>
-    <div style="font-weight:800;font-size:13px">Smartrental Collection Gran Vía Centric — Concrete / Green</div>
-    <div style="font-size:12px;margin-top:3px;line-height:1.35">Conf #5646283231 PIN 0395 • 42 Calle Gran Vía, 28013 Madrid • Check-in Sat Oct 10 3PM → Checkout Sat Oct 17 11AM • 7 nights • One-Bedroom for 3 • €2,292.64 paid • <a href="https://www.hotels.com/ho1046985952/smartrental-collection-gran-via-centric-madrid-spain/" target="_blank">Booking link ↗</a> • <a href="https://www.google.com/maps/search/?api=1&query=Smartrental+Collection+Gran+Via+Centric+Madrid" target="_blank">Maps ↗</a></div>
-  </div>
+<div id="itinerary-pane" style="display:none"><div id="itinerary-list" class="sub">Itinerary cards from Hatch export — see Hatch version for full drag-drop. For now this GitHub version focuses on Bars. Your full itinerary is in Hatch.</div></div>
+<div id="hotel-pane" style="display:none"><div class="card" style="border-left-color:var(--green-b)"><h3>Smartrental Collection Gran Via Centric</h3><div class="meta">42 Calle Gran Vía, 28013 Madrid • Check-in Sat Oct 10 3PM → Sat Oct 17 11AM • Conf #5646283231 PIN 0395 • 7 nights €2,292.64</div><div class="btns"><a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=Smartrental%20Collection%20Gran%20Via%20Centric%20Madrid" target="_blank">Maps</a><a class="btn" href="https://www.booking.com/hotel/es/smartrental-collection-gran-via-centric.html" target="_blank">Booking.com</a></div></div></div>
 </div>
-
-<div class="filters" id="filters"></div>
-<div class="legend"><span><i class="dot" style="background:#16a34a"></i>Concrete</span><span><i class="dot" style="background:#ca8a04"></i>Maybe</span><span><i class="dot" style="background:#ea580c"></i>TBD</span><span style="margin-left:auto">↕ drag any card to reorder • saves locally</span></div>
-
-<div class="cards" id="cards">
-    <div class="card" draggable="true" data-date="2026-10-10" data-index="0" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-10 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Arrive Madrid</div>
-      
-      <div class="notes">AA SFO-MAD</div>
-      <div class="links"><a href="https://www.google.com/travel/flights" target="_blank" class="link-chip">🔗 www.google.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-10" data-index="1" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-10 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Check-in - Smartrental Gran Via Centric</div>
-      <div class="loc">📍 42 Calle Gran Vía, Madrid 28013</div>
-      <div class="notes">Conf #5646283231 PIN 0395 • 42 Calle Gran Vía, Madrid 28013 • Check-in Sat Oct 10 2026 3PM, Check-out Sat Oct 17 11AM, 7 nights • One-Bedroom Apartment for 3 adults • €2,292.64 paid, non-refundable • Conf 5646283231 PIN 0395 - 42 Calle Gran Via - 3PM check-in</div>
-      <div class="links"><a href="https://www.hotels.com/ho1046985952/smartrental-collection-gran-via-centric-madrid-spain/" target="_blank" class="link-chip">🔗 www.hotels.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-10" data-index="2" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-10 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Free concert - Sebastian Yatra</div>
-      
-      <div class="notes">Hispanidad 2026 free concert</div>
-      <div class="links"><a href="https://sebastianyatra.com/pages/shows-2026" target="_blank" class="link-chip">🔗 sebastianyatra.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-10" data-index="3" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-10 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Marta Sanchez - Hispanidad 2026</div>
-      
-      <div class="notes">150+ activities Oct 2-12</div>
-      <div class="links"><a href="https://www.comunidad.madrid/hispanidad-2026" target="_blank" class="link-chip">🔗 www.comunidad.madrid ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-11" data-index="4" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-11 • Afternoon • Afternoon</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Reina Sofia Museum - Guernica</div>
-      
-      <div class="notes">Must see</div>
-      <div class="links"><a href="https://www.museoreinasofia.es/en" target="_blank" class="link-chip">🔗 www.museoreinasofia.es ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-11" data-index="5" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-11 • Afternoon • Afternoon</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">El Rastro Flea Market</div>
-      
-      <div class="notes">Sundays only - Oct 11 is Sunday</div>
-      <div class="links"><a href="https://www.esmadrid.com/en/shopping/el-rastro" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-11" data-index="6" data-status="TBD" style="border-left:4px solid #ea580c; background:#ffedd5cc">
-      <div class="card-head">
-        <span class="badge" style="background:#ffedd5; border:1px solid #ea580c55; color:#ea580c">TBD</span>
-        <span class="time">2026-10-11 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">LSD</div>
-      
-      <div class="notes">TENTATIVE LSD</div>
-      <div class="links"><a href="https://www.esmadrid.com/en/whats-on" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-11" data-index="7" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-11 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Walk around Centro</div>
-      
-      <div class="notes">Explore neighborhoods</div>
-      <div class="links"><a href="https://www.esmadrid.com/en" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-11" data-index="8" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-11 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Potential Park - Retiro?</div>
-      
-      <div class="notes">Retiro Park row boat</div>
-      <div class="links"><a href="https://www.esmadrid.com/en/tourist-information/parque-del-retiro" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-11" data-index="9" data-status="TBD" style="border-left:4px solid #ea580c; background:#ffedd5cc">
-      <div class="card-head">
-        <span class="badge" style="background:#ffedd5; border:1px solid #ea580c55; color:#ea580c">TBD</span>
-        <span class="time">2026-10-11 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">FAFO</div>
-      
-      <div class="notes">TBD</div>
-      <div class="links"><span class="nolink">no link</span></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-11" data-index="10" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-11 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Real Madrid vs Villarreal?</div>
-      
-      <div class="notes">Check Bernabeu date</div>
-      <div class="links"><a href="https://www.realmadrid.com/en-US/the-club/santiago-bernabeu-stadium" target="_blank" class="link-chip">🔗 www.realmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-11" data-index="11" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-11 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Free Concerts - Hispanidad</div>
-      
-      <div class="notes">Evening concerts</div>
-      <div class="links"><a href="https://www.comunidad.madrid/hispanidad-2026" target="_blank" class="link-chip">🔗 www.comunidad.madrid ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-11" data-index="12" data-status="TBD" style="border-left:4px solid #ea580c; background:#ffedd5cc">
-      <div class="card-head">
-        <span class="badge" style="background:#ffedd5; border:1px solid #ea580c55; color:#ea580c">TBD</span>
-        <span class="time">2026-10-11 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Famous Orchestra Bet</div>
-      
-      <div class="notes">TODO - Orchestra Person Performing</div>
-      <div class="links"><a href="https://ocne.inaem.gob.es/programacion/sinfonico-03" target="_blank" class="link-chip">🔗 ocne.inaem.gob.es ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-12" data-index="13" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-12 • Afternoon • Afternoon</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Prado Museum - Free Day</div>
-      
-      <div class="notes">Spain National Day free entry</div>
-      <div class="links"><a href="https://www.museodelprado.es/en" target="_blank" class="link-chip">🔗 www.museodelprado.es ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-12" data-index="14" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-12 • Afternoon • Afternoon</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Beer Bet</div>
-      
-      <div class="notes">Casual</div>
-      <div class="links"><span class="nolink">no link</span></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-12" data-index="15" data-status="TBD" style="border-left:4px solid #ea580c; background:#ffedd5cc">
-      <div class="card-head">
-        <span class="badge" style="background:#ffedd5; border:1px solid #ea580c55; color:#ea580c">TBD</span>
-        <span class="time">2026-10-12 • Afternoon • Afternoon</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Peyman TODO: Book Food</div>
-      
-      <div class="notes">Need restaurant booking</div>
-      <div class="links"><span class="nolink">no link</span></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-12" data-index="16" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-12 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Spain National Day Parade</div>
-      
-      <div class="notes">Oct 12 parade - fixed</div>
-      <div class="links"><a href="https://www.esmadrid.com/en/whats-on/national-day" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-12" data-index="17" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-12 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Clubbing? Cafe Berlin or Sala La Riviera</div>
-      
-      <div class="notes">Spain National Day night</div>
-      <div class="links"><a href="https://www.esmadrid.com/en/nightlife" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-13" data-index="18" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-13 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Royal Palace</div>
-      
-      <div class="notes">TODO Sina - but palace is concrete</div>
-      <div class="links"><a href="https://www.patrimonionacional.es/en/visita/palacio-real-de-madrid" target="_blank" class="link-chip">🔗 www.patrimonionacional.es ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-13" data-index="19" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-13 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">SUMA FLAMENCA Opening Night</div>
-      
-      <div class="notes">Flamenco festival opening</div>
-      <div class="links"><a href="https://www.madrid.org/clas_art/red/sumaflamenca.html" target="_blank" class="link-chip">🔗 www.madrid.org ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-13" data-index="20" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-13 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Feria de Otono Bullfight - Las Ventas</div>
-      
-      <div class="notes">Needs de-kosification discussion</div>
-      <div class="links"><a href="https://www.toroslasventas.com/feria-de-otono/" target="_blank" class="link-chip">🔗 www.toroslasventas.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-14" data-index="21" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-14 • Afternoon • Afternoon</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Toledo Art Museums - El Greco</div>
-      
-      <div class="notes">TODO Sina Book but museum is concrete</div>
-      <div class="links"><a href="https://www.museoelgreco.es/" target="_blank" class="link-chip">🔗 www.museoelgreco.es ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-14" data-index="22" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-14 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Toledo Day Trip</div>
-      
-      <div class="notes">Day trip - Madrid Atocha to Toledo 30min</div>
-      <div class="links"><a href="https://www.renfe.com/es/en" target="_blank" class="link-chip">🔗 www.renfe.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-14" data-index="23" data-status="TBD" style="border-left:4px solid #ea580c; background:#ffedd5cc">
-      <div class="card-head">
-        <span class="badge" style="background:#ffedd5; border:1px solid #ea580c55; color:#ea580c">TBD</span>
-        <span class="time">2026-10-14 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Book Train Tickets</div>
-      
-      <div class="notes">TODO - book bullet train</div>
-      <div class="links"><a href="https://www.renfe.com/es/en" target="_blank" class="link-chip">🔗 www.renfe.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-15" data-index="24" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-15 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">La Latina - Historic Tapas</div>
-      
-      <div class="notes">Historic tapas area</div>
-      <div class="links"><a href="https://www.esmadrid.com/en/nightlife/la-latina" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-15" data-index="25" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-15 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Third Museum - Thyssen?</div>
-      
-      <div class="notes">Third museum</div>
-      <div class="links"><a href="https://www.museothyssen.org/en" target="_blank" class="link-chip">🔗 www.museothyssen.org ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-15" data-index="26" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-15 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Gran Via - Architecture/Shops/Restaurants</div>
-      
-      <div class="notes">Great at night</div>
-      <div class="links"><a href="https://www.esmadrid.com/en/nightlife/gran-via" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-15" data-index="27" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-15 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Real Madrid Basketball Euroleague</div>
-      
-      <div class="notes">Oct 15 game</div>
-      <div class="links"><a href="https://www.realmadrid.com/en-US/basketball/games/euroleague/real-madrid-ldlc-asvel-villeurbanne/15-10-2026" target="_blank" class="link-chip">🔗 www.realmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-16" data-index="28" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-16 • Afternoon • Afternoon</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Malasana + Conde Duque exploration</div>
-      
-      <div class="notes">Shops, galleries</div>
-      <div class="links"><a href="https://www.esmadrid.com/en" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-16" data-index="29" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-16 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">La Latina? / Malasana + Conde Duque</div>
-      
-      <div class="notes">Question mark - maybe</div>
-      <div class="links"><a href="https://www.esmadrid.com/en/nightlife/malasana" target="_blank" class="link-chip">🔗 www.esmadrid.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-16" data-index="30" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-16 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Spanish National Orchestra</div>
-      
-      <div class="notes">OCNE concert - Ali like</div>
-      <div class="links"><a href="https://ocne.inaem.gob.es/programacion/sinfonico-03" target="_blank" class="link-chip">🔗 ocne.inaem.gob.es ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-16" data-index="31" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-16 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Alvin Ailey Dance Theater</div>
-      
-      <div class="notes">Dance performance</div>
-      <div class="links"><a href="https://ailey.org/alvin-ailey-american-dance-theater" target="_blank" class="link-chip">🔗 ailey.org ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-17" data-index="32" data-status="Concrete" style="border-left:4px solid #16a34a; background:#dcfce7cc">
-      <div class="card-head">
-        <span class="badge" style="background:#dcfce7; border:1px solid #16a34a55; color:#16a34a">Concrete</span>
-        <span class="time">2026-10-17 • Morning • Morning</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Check-out</div>
-      
-      <div class="notes">11AM check-out</div>
-      <div class="links"><a href="https://www.hotels.com/ho1046985952/smartrental-collection-gran-via-centric-madrid-spain/" target="_blank" class="link-chip">🔗 www.hotels.com ↗</a></div>
-    </div>
-    <div class="card" draggable="true" data-date="2026-10-17" data-index="33" data-status="Maybe" style="border-left:4px solid #ca8a04; background:#fef9c3cc">
-      <div class="card-head">
-        <span class="badge" style="background:#fef9c3; border:1px solid #ca8a0455; color:#ca8a04">Maybe</span>
-        <span class="time">2026-10-17 • Night • Night</span>
-        <span class="drag">↕ drag</span>
-      </div>
-      <div class="title">Real Madrid vs Sevilla?</div>
-      
-      <div class="notes">Maybe game - check date</div>
-      <div class="links"><a href="https://www.realmadrid.com/en-US" target="_blank" class="link-chip">🔗 www.realmadrid.com ↗</a></div>
-    </div></div>
-
-<button class="chat-fab" id="chatFab" title="Prompts (123456)">💬</button>
-<div class="chat-panel" id="chatPanel">
-  <div class="chat-head"><span>Trip Assistant — collects prompts only</span><button id="closeChat" style="background:none;border:0;font-size:18px;cursor:pointer">✕</button></div>
-  <div id="passGate" class="pass-wrap">
-    <div style="font-size:13px;font-weight:600">Enter passcode to unlock</div>
-    <div style="font-size:12px;color:#8a7d76;margin-top:4px">Prompts are saved locally only. No actions executed.</div>
-    <input id="passInput" type="password" placeholder="passcode" inputmode="numeric">
-    <div id="passErr" style="font-size:12px;color:#dc2626;display:none">Wrong code</div>
-    <button class="btn" id="unlockBtn" style="width:100%;margin-top:8px">Unlock</button>
-  </div>
-  <div id="chatBody" style="display:none;flex-direction:column;flex:1;overflow:hidden">
-    <div class="chat-list" id="chatList"></div>
-    <div class="chat-input-row">
-      <input id="promptInput" placeholder="Add a prompt / idea… (saved only)">
-      <button class="btn" id="savePrompt">Save</button>
-    </div>
-  </div>
-</div>
-
-<script>window.HATCH_API_URL = localStorage.getItem("hatch_api_url") || "https://madrid-trip-october-2026-2.hatch.space/actions";</script>
 <script>
-const STORAGE_KEY="madrid_cards_order_v2";
-const PROMPT_KEY="madrid_prompts_v1";
-const UNLOCK_KEY="madrid_chat_unlocked";
-
-const DATES=[
-  {d:"2026-10-10",label:"Sat 10"},{d:"2026-10-11",label:"Sun 11"},{d:"2026-10-12",label:"Mon 12"},{d:"2026-10-13",label:"Tue 13"},{d:"2026-10-14",label:"Wed 14 Toledo"},{d:"2026-10-15",label:"Thu 15"},{d:"2026-10-16",label:"Fri 16"},{d:"2026-10-17",label:"Sat 17 checkout"}
-];
-
-const filtersEl=document.getElementById("filters");
-const cardsEl=document.getElementById("cards");
-let activeDate="all";
-
+const bars = [{"name": "Salmon Guru", "address": "Calle de Echegaray 21, Centro 28014, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Salmon+Guru+Calle+de+Echegaray+21+Madrid", "website": "https://salmonguru.es", "website_label": "salmonguru.es \u2014 4.6/660 reviews", "hours": "Sun-Thu 4pm-2am, Fri-Sat 4pm-2:30am", "reservation_info": "Walk-ins welcome \u2014 no reservations. Max 6 people. Arrive early Fri/Sat. Highly recommended early 7-8pm.", "price_range": "~12\u20ac cocktails \u2014 4.6/660 reviews", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden", "Good Vibes"], "why": "World's 50 Best Bars #23 in 2024. Maximalist comic-book chapel vibe \u2014 neon saints, irreverent menu Fruity to WTF?, signature La Mano de Dios. The one everyone talks about."}, {"name": "Angelita Madrid", "address": "Calle de la Reina 4, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Angelita+Madrid+Calle+de+la+Reina+4", "website": "https://madrid-angelita.es", "website_label": "madrid-angelita.es \u2014 4.5/608", "hours": "Mon-Fri 17:30-02:00/02:30 (bar). Dining closed Sat Sun", "reservation_info": "Bar area does NOT take bookings \u2014 walk-in only. Dining DOES via OpenTable \u2014 booking essential.", "price_range": "~13-14\u20ac cocktails \u2014 4.5/608", "vibe_tags": ["Unique Cocktail", "Good Vibes / Vermouth", "Classic Madrid"], "why": "Best cocktail bar in Spain FIBAR 2021, World's 50 Best #65 2024. No ice / no citrus sustainable cocktails, wine bar 2000+ bottles."}, {"name": "1862 Dry Bar", "address": "Calle del Pez 27, Malasa\u00f1a, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=1862+Dry+Bar+Calle+del+Pez+27+Madrid", "website": "https://1862drybar.com", "website_label": "1862drybar.com \u2014 4.7/297", "hours": "Daily 3:30pm-2am", "reservation_info": "Walk-ins welcome \u2014 no reservations required. Small room, arrive early Fri/Sat.", "price_range": "~12-14\u20ac \u2014 4.7/297, 4.6/1200 Google", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden", "Classic Madrid"], "why": "Classic speakeasy in 1862 palace. 150+ brands, pure classic cocktail focus."}, {"name": "Macera Taller Bar", "address": "Calle de San Mateo 21, 28004 Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Macera+Taller+Bar+Calle+de+San+Mateo+21+Madrid", "website": "https://macera.es", "website_label": "macera.es \u2014 4.8 highly rated", "hours": "Tue-Sun 7pm-2am", "reservation_info": "Walk-ins welcome, reservations recommended Fri/Sat via website/IG.", "price_range": "~12-13\u20ac \u2014 4.8 rating", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden", "Good Vibes"], "why": "House-infused rums/gins, constantly evolving menu, industrial chic."}, {"name": "Incl\u00e1n Brutal Bar", "address": "Calle de \u00c1lvarez Gato 4, Barrio de las Letras, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Inclan+Brutal+Bar+Madrid", "website": "https://inclanbrutalbar.com", "website_label": "inclanbrutalbar.com \u2014 4.7/19872", "hours": "Daily 7pm-2:30am", "reservation_info": "Walk-ins only \u2014 no reservation. Arrive early, gets busy after 11pm.", "price_range": "~12\u20ac \u2014 4.7/19872", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden", "Good Vibes"], "why": "Drinks served in mini bathtubs, skulls, bird cages. Avant-garde, theatrical."}, {"name": "Del Diego Cocktail Bar", "address": "Calle de la Reina 12, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Del+Diego+Cocktail+Bar+Calle+de+la+Reina+12+Madrid", "website": "https://www.esmadrid.com/en/nightlife/del-diego", "website_label": "esmadrid.com/del-diego", "hours": "Mon-Thu 7pm-3am, Fri-Sat 7pm-3:30am, closed Sun", "reservation_info": "Walk-ins \u2014 no reservation. NY-style since 1990.", "price_range": "~13\u20ac cocktails", "vibe_tags": ["Unique Cocktail", "Classic Madrid", "Good Vibes"], "why": "NY-style since 1990, wood-paneled award-winning interior. Old-school classic."}, {"name": "Teatro Kapital", "address": "Calle de Atocha 125, Madrid \u2014 7 floors", "maps_link": "https://www.google.com/maps/search/?api=1&query=Teatro+Kapital+Calle+de+Atocha+125+Madrid", "website": "https://teatrokapital.com", "website_label": "teatrokapital.com \u2014 4.44/7454", "hours": "11pm-6am (Thu-Sat peak)", "reservation_info": "Tickets via Fever / website. General admission +2 drinks before 1am 1 after. Dress code smart elegant. Phone +34 914202906.", "price_range": "~20-25\u20ac entry incl. drinks \u2014 4.44/7454", "vibe_tags": ["Late Night Dance", "Good Vibes", "Unique Cocktail"], "why": "Madrid's high temple of hedonism \u2014 7 floors different music (R&B, salsa, house)."}, {"name": "Mondo Disko", "address": "Calle de Hern\u00e1n Cort\u00e9s, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Mondo+Disko+Madrid", "website": "https://mondodisko.es", "website_label": "mondodisko.es \u2014 techno institution", "hours": "Fri-Sat 11:30pm-6am", "reservation_info": "Tickets at door or via Dice / Resident Advisor. Usually \u20ac10-20 entry.", "price_range": "~12-20\u20ac entry", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Small dark house/techno institution, local DJs, best sound system."}, {"name": "Marula Caf\u00e9", "address": "Calle Ca\u00f1os Viejos 3, La Latina, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Marula+Cafe+Madrid", "website": "https://www.marulacafe.com", "website_label": "marulacafe.com \u2014 funk/soul", "hours": "Daily 11pm-5am, live band early then DJs", "reservation_info": "No reservation \u2014 walk-in. Free before midnight usually.", "price_range": "~10-12\u20ac cocktails, free before 12am", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Funk / soul / disco, live band early then DJs. Friendly dance floor."}, {"name": "Caf\u00e9 Berl\u00edn", "address": "Costanilla de los \u00c1ngeles 20, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Cafe+Berlin+Costanilla+de+los+Angeles+20+Madrid", "website": "https://berlincafe.es", "website_label": "berlincafe.es \u2014 4.4/14", "hours": "Tue-Sun 8pm-3am (live jazz 9pm-12am, club after)", "reservation_info": "Tickets for live shows via website. Otherwise walk-in.", "price_range": "~10-15\u20ac entry / cocktails \u2014 4.4/14", "vibe_tags": ["Late Night Dance", "Good Vibes", "Classic Madrid"], "why": "Live jazz / world music till midnight, then dance club. Best culture + late night combo."}, {"name": "Planet Club", "address": "Calle del Pr\u00edncipe 20, Madrid (near Sol)", "maps_link": "https://www.google.com/maps/search/?api=1&query=Planet+Club+Calle+del+Principe+20+Madrid", "website": "https://www.instagram.com/planetclubmadrid/", "website_label": "Instagram @planetclubmadrid", "hours": "Sun-Thu 8pm-3am, Fri-Sat 8pm-3:30am", "reservation_info": "No reservation \u2014 walk-in. Neon 365 days. Cover ~\u20ac10 with drink.", "price_range": "~10\u20ac entry incl. drink", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Neon-drenched, 365 days high-energy crowds. Right by Sol station."}, {"name": "Rosi La Loca", "address": "Calle de C\u00e1diz 4, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Rosi+La+Loca+Calle+de+Cadiz+4+Madrid", "website": "https://rosilaloca.com", "website_label": "rosilaloca.com \u2014 4.7/24095", "hours": "Daily 1pm-2am", "reservation_info": "Reservations via website \u2014 recommended.", "price_range": "~13\u20ac cocktails \u2014 4.7/24095", "vibe_tags": ["Unique Cocktail", "Good Vibes"], "why": "Gastropub, inventive cocktails in standout glassware. Maximalist decor."}, {"name": "Azotea del C\u00edrculo", "address": "C. del Marqu\u00e9s de Casa Riera 2, Centro \u2014 C\u00edrculo de Bellas Artes rooftop", "maps_link": "https://www.google.com/maps/search/?api=1&query=Azotea+del+Circulo+Madrid", "website": "https://circulobellasartes.com/azotea/", "website_label": "circulobellasartes.com \u2014 4.2/10704", "hours": "Daily 10am-1am (rooftop sunset prime 8-11pm)", "reservation_info": "No reservation for rooftop \u2014 entry \u20ac4-5 to building.", "price_range": "~12-14\u20ac cocktails \u2014 4.2/10704", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "360-degree skyline from Bellas Artes rooftop. Craft cocktails, live beats."}, {"name": "Azotea Cibeles", "address": "Plaza Cibeles 1, 6th floor \u2014 Palacio de Cibeles", "maps_link": "https://www.google.com/maps/search/?api=1&query=Azotea+Cibeles+Plaza+Cibeles+1+Madrid", "website": "https://azoteacibeles.com", "website_label": "azoteacibeles.com \u2014 4.1/9475", "hours": "Daily 11am-1am", "reservation_info": "Reservations recommended via website.", "price_range": "~13\u20ac cocktails \u2014 4.1/9475", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "Rooftop cocktails with Cibeles Palace view."}, {"name": "Bad Company 1920", "address": "Calle Miguel Moya 8, near Callao, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Bad+Company+1920+Calle+Miguel+Moya+8+Madrid", "website": "https://badcompany1920.com", "website_label": "badcompany1920.com \u2014 speakeasy", "hours": "Tue-Sun 7pm-2:30am", "reservation_info": "Reservations via website/IG. Hidden door.", "price_range": "~13\u20ac cocktails", "vibe_tags": ["Speakeasy / Hidden", "Unique Cocktail"], "why": "1920s speakeasy near Callao, cocktail-led. Hidden entrance."}, {"name": "Devil's Cut", "address": "Calle del Le\u00f3n 3, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Devils+Cut+Calle+del+Leon+3+Madrid", "website": "https://www.esmadrid.com/en/nightlife/devils-cut", "website_label": "esmadrid.com \u2014 40-year rejuvenated", "hours": "Daily 6pm-2am", "reservation_info": "Walk-ins, reservations for groups.", "price_range": "~12\u20ac cocktails", "vibe_tags": ["Unique Cocktail", "Speakeasy / Hidden"], "why": "40-year-old bar rejuvenated \u2014 Japanese techniques + NY cocktail + sherry bar."}, {"name": "Museo Chicote", "address": "Gran V\u00eda 12, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Museo+Chicote+Gran+Via+12+Madrid", "website": "https://museo-chicote.com", "website_label": "museo-chicote.com \u2014 4.5 rating", "hours": "Daily 6pm-3am", "reservation_info": "Walk-ins \u2014 historic 1931, no reservation needed.", "price_range": "~14\u20ac cocktails \u2014 4.5 rating", "vibe_tags": ["Classic Madrid", "Unique Cocktail"], "why": "Historic 1931 \u2014 classic Madrid, Hemingway's bar."}, {"name": "La Venencia", "address": "Calle Echegaray 7, Barrio de las Letras, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=La+Venencia+Calle+Echegaray+7+Madrid", "website": "https://www.esmadrid.com/en/nightlife/la-venencia", "website_label": "sherry-only dive \u2014 4.7 rating", "hours": "Daily 12:30-3:30pm, 7:30pm-12am", "reservation_info": "No reservation \u2014 sherry-only dive since 1920s.", "price_range": "~4-6\u20ac sherry \u2014 4.7 rating", "vibe_tags": ["Classic Madrid", "Good Vibes / Vermouth"], "why": "Sherry-only dive since 1920s, no music, dusty bottles, manzanilla."}, {"name": "Casa Camacho", "address": "Calle de San Andr\u00e9s 4, Malasa\u00f1a, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Casa+Camacho+Calle+de+San+Andres+4+Madrid", "website": "https://www.esmadrid.com/en/nightlife/casa-camacho", "website_label": "vermouth legend \u2014 cheap", "hours": "Daily 12pm-2am", "reservation_info": "No reservation \u2014 vermouth bar, cross-generational.", "price_range": "~3-5\u20ac vermouth + Yayo \u2014 cheap", "vibe_tags": ["Good Vibes / Vermouth", "Classic Madrid"], "why": "Vermouth + Yayo (vermouth, gin, lemonade), cross-generational, cheap."}, {"name": "Gilda Haus", "address": "Calle de Recoletos 13, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Gilda+Haus+Madrid", "website": "https://www.instagram.com/gildahausmadrid/", "website_label": "Instagram @gildahausmadrid", "hours": "Tue-Sat 7pm-2am", "reservation_info": "Walk-ins \u2014 bar + nightclub between.", "price_range": "~10-12\u20ac \u2014 vermouth & Garibaldi Spritz", "vibe_tags": ["Good Vibes / Vermouth", "Late Night Dance"], "why": "Bar + nightclub between, orange curtains, gildas, classic house under disco ball."}, {"name": "360\u00ba Rooftop Bar \u2014 Hotel Riu Plaza Espa\u00f1a", "address": "Hotel Riu Plaza Espa\u00f1a 27th floor, Gran V\u00eda 84, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=360+Rooftop+Bar+Hotel+Riu+Madrid", "website": "https://www.riu.com/en/hotel/riu-plaza-espana/", "website_label": "riu.com \u2014 5.0 rating, highest rooftop", "hours": "Daily 12pm-2am", "reservation_info": "Reservations via hotel website \u2014 highest rooftop, 360 views. Sunset sells out.", "price_range": "~15\u20ac cocktails \u2014 5.0 rating", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "Highest rooftop in Madrid, 27th floor, 360 views."}, {"name": "SALA EQUIS", "address": "Calle Duque de Alba 4, La Latina, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=SALA+EQUIS+Calle+Duque+de+Alba+4+Madrid", "website": "https://salaequis.com", "website_label": "salaequis.com \u2014 5.0 rating", "hours": "Daily 12pm-1am", "reservation_info": "No reservation \u2014 cinema bar, former erotic cinema.", "price_range": "~10\u20ac cocktails \u2014 5.0 rating", "vibe_tags": ["Unique Cocktail", "Good Vibes"], "why": "Cinema bar \u2014 former erotic cinema, cocktails + films."}, {"name": "Picalagartos Sky Bar", "address": "Gran V\u00eda 21, 9th floor \u2014 Hotel Santo Mauro / NH", "maps_link": "https://www.google.com/maps/search/?api=1&query=Picalagartos+Sky+Bar+Gran+Via+21+Madrid", "website": "https://picalagartos.com", "website_label": "picalagartos.com \u2014 360 views", "hours": "Daily 1pm-1am", "reservation_info": "Reservations recommended \u2014 360 views, bohemian vibe.", "price_range": "~13\u20ac cocktails", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "360 views, bohemian vibe, Luca Anastasio cocktails."}, {"name": "Casa Suecia", "address": "Calle Marqu\u00e9s de Casa Riera 4, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Casa+Suecia+Madrid", "website": "https://casasuecia.es", "website_label": "casasuecia.es \u2014 rooftop + speakeasy", "hours": "Sat-Wed 8am-2am, Thu-Fri till 3:30am", "reservation_info": "No reservations \u2014 rooftop + speakeasy, 360 view.", "price_range": "~12\u20ac cocktails", "vibe_tags": ["Rooftop", "Speakeasy / Hidden"], "why": "Rooftop + speakeasy, 360 view Cibeles/Retiro."}, {"name": "\u00c1tico 11 \u2014 Iberostar Las Letras Gran Via", "address": "Gran V\u00eda 11, 6th floor, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Atico+11+Iberostar+Las+Letras+Gran+Via+11+Madrid", "website": "https://www.iberostar.com/en/hotel/iberostar-las-letras-gran-via/", "website_label": "iberostar.com \u2014 verdant rooftop garden", "hours": "Daily 5pm-1am", "reservation_info": "Reservations recommended \u2014 verdant rooftop garden, refined.", "price_range": "~13\u20ac \u2014 gin & tonics & mojitos", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "Verdant rooftop garden, refined, gin & tonics & mojitos."}, {"name": "Fat Cats Cocktail House", "address": "Calle de la Palma 4, Cortes, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Fat+Cats+Cocktail+House+Madrid", "website": "https://www.instagram.com/fatcatsmadrid/", "website_label": "Instagram @fatcatsmadrid \u2014 4.3/58", "hours": "Wed-Sun 7pm-2am", "reservation_info": "Reservations via IG/website. 70s Palm Beach mansion vibe.", "price_range": "~13\u20ac \u2014 4.3/58", "vibe_tags": ["Speakeasy / Hidden", "Unique Cocktail"], "why": "70s Palm Beach mansion vibe, spirit-forward cocktails, speakeasy."}, {"name": "Savas Bar", "address": "Calle del Esp\u00edritu Santo 11, Malasa\u00f1a, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Savas+Bar+Madrid", "website": "https://www.google.com/search?q=Savas+Bar+Madrid", "website_label": "5.0/2 reviews \u2014 cozy", "hours": "Daily 6pm-2am", "reservation_info": "Walk-ins \u2014 cozy, lovely service.", "price_range": "~10\u20ac \u2014 5.0/2", "vibe_tags": ["Good Vibes", "Unique Cocktail"], "why": "Cozy, lovely service, central location cozy evening."}, {"name": "La Terraza de \u00d3scar \u2014 Room Mate \u00d3scar", "address": "Plaza Pedro Zerolo 12, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=La+Terraza+de+Oscar+Plaza+Pedro+Zerolo+12+Madrid", "website": "https://room-matehotels.com/en/oscar/", "website_label": "room-matehotels.com/oscar", "hours": "Mon-Fri 4:30-11pm, Sat-Sun 3-11pm", "reservation_info": "Reservations recommended \u2014 designer rooftop.", "price_range": "~12\u20ac cocktails", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "Designer rooftop above Chueca, pool vibe, great for sunset."}, {"name": "El Tigre Sidra Bar", "address": "Calle Infantas 23, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=El+Tigre+Sidra+Bar+Calle+Infantas+23+Madrid", "website": "https://www.esmadrid.com/en/nightlife/el-tigre-sidra-bar", "website_label": "esmadrid.com \u2014 4.2/26113", "hours": "Daily 12pm-1am", "reservation_info": "No reservation \u2014 sidra pours endless free tapas. Rowdiest generous ritual.", "price_range": "~5\u20ac sidra + free tapas \u2014 4.2/26113", "vibe_tags": ["Classic Madrid", "Good Vibes"], "why": "Sidra pours endless free tapas \u2014 rowdiest generous ritual."}, {"name": "Thompson Madrid Rooftop", "address": "Calle de Montera 24, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Thompson+Madrid+Rooftop+Calle+de+Montera+24", "website": "https://www.thompsonhotels.com/madrid/rooftop", "website_label": "thompsonhotels.com \u2014 rooftop", "hours": "Daily 12pm-2am", "reservation_info": "Reservations via hotel \u2014 rooftop with Gran V\u00eda views.", "price_range": "~14\u20ac cocktails", "vibe_tags": ["Rooftop", "Good Vibes"], "why": "New design hotel rooftop, Gran V\u00eda views, refined cocktails."}, {"name": "Goya Social Club", "address": "Calle de Goya 43, Salamanca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Goya+Social+Club+Calle+de+Goya+43+Madrid", "website": "https://goyasocialclub.com", "website_label": "goyasocialclub.com \u2014 club", "hours": "Fri-Sat 11pm-6am", "reservation_info": "Tickets via Resident Advisor / website.", "price_range": "~15-20\u20ac entry", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Madrid underground staple \u2014 house/techno, no frills."}, {"name": "Panda Club Madrid", "address": "Calle de Recoletos 2, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Panda+Club+Madrid+Calle+de+Recoletos+2", "website": "https://www.instagram.com/pandaclubmadrid/", "website_label": "Instagram @pandaclubmadrid \u2014 5.0/5", "hours": "Fri-Sat 11pm-5am", "reservation_info": "Reservations via IG \u2014 small club, intimate.", "price_range": "~12\u20ac entry \u2014 5.0/5", "vibe_tags": ["Late Night Dance", "Speakeasy / Hidden"], "why": "Small intimate club, great sound, 5.0/5 rating."}, {"name": "ThunderCat Club", "address": "Calle Campoamor 11, Chueca, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=ThunderCat+Club+Calle+Campoamor+11+Madrid", "website": "https://www.google.com/search?q=ThunderCat+Club+Madrid", "website_label": "3.9/27 \u2014 great music interior 11\u20ac with drink", "hours": "Thu-Sat 11pm-5am", "reservation_info": "Walk-in \u2014 great music interior, 11\u20ac with drink.", "price_range": "~11\u20ac with drink \u2014 3.9/27", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Great music interior, 11\u20ac with drink. Rock / indie crossover."}, {"name": "ICON Madrid", "address": "Calle de Toledo 16, La Latina, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=ICON+Madrid+Calle+de+Toledo+16", "website": "https://www.esmadrid.com/en/nightlife/icon-madrid", "website_label": "esmadrid.com/icon-madrid \u2014 always fun", "hours": "Fri-Sat 11pm-6am", "reservation_info": "Tickets via Fever \u2014 always fun.", "price_range": "~15\u20ac entry", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Always fun, big dance club, tourist-friendly but energetic."}, {"name": "Tropical House", "address": "Calle de Santa Ana 4, La Latina, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Tropical+House+Calle+de+Santa+Ana+4+Madrid", "website": "https://www.google.com/search?q=Tropical+House+Madrid", "website_label": "3.8/9 \u2014 friendly will ask to dance", "hours": "Thu-Sat 10pm-4am", "reservation_info": "Walk-in \u2014 friendly will ask to dance, affordable drinks.", "price_range": "~8\u20ac drinks \u2014 3.8/9", "vibe_tags": ["Late Night Dance", "Good Vibes"], "why": "Friendly will ask to dance, affordable drinks, places to sit, DJ great music."}, {"name": "Sala El Sol", "address": "Calle Jardines 3, Centro, Madrid", "maps_link": "https://www.google.com/maps/search/?api=1&query=Sala+El+Sol+Calle+Jardines+3+Madrid", "website": "https://salaelsol.com", "website_label": "salaelsol.com \u2014 3.6/14", "hours": "Wed-Sat 9pm-5am", "reservation_info": "Tickets via website \u2014 friendly staff clean restrooms nice space.", "price_range": "~10-12\u20ac entry \u2014 3.6/14", "vibe_tags": ["Late Night Dance", "Classic Madrid"], "why": "Friendly staff clean restrooms nice space. Historic concert hall turned late club."}];
+const vibes = ["All","Unique Cocktail","Rooftop","Speakeasy / Hidden","Late Night Dance","Good Vibes","Good Vibes / Vermouth","Classic Madrid"];
+let activeVibe="All";
+function colorFor(vibesArr){
+  if(vibesArr.includes("Unique Cocktail")) return "#16a34a";
+  if(vibesArr.includes("Rooftop")) return "#2563eb";
+  if(vibesArr.includes("Speakeasy / Hidden")) return "#9333ea";
+  if(vibesArr.includes("Late Night Dance")) return "#db2777";
+  if(vibesArr.includes("Good Vibes / Vermouth")) return "#d97706";
+  if(vibesArr.includes("Classic Madrid")) return "#ea580c";
+  return "#16a34a";
+}
 function renderFilters(){
-  const counts={};
-  document.querySelectorAll(".card").forEach(c=>{ const d=c.dataset.date; counts[d]=(counts[d]||0)+1 });
-  filtersEl.innerHTML="";
-  const all=document.createElement("button"); all.className="chip"+(activeDate==="all"?" active":""); all.innerHTML=`All <span class="count">${document.querySelectorAll(".card").length}</span>`; all.onclick=()=>{activeDate="all";applyFilter();renderFilters()}; filtersEl.appendChild(all);
-  DATES.forEach(o=>{ const chip=document.createElement("button"); chip.className="chip"+(activeDate===o.d?" active":""); chip.innerHTML=`${o.label} <span class="count">${counts[o.d]||0}</span>`; chip.onclick=()=>{activeDate=o.d;applyFilter();renderFilters()}; filtersEl.appendChild(chip); });
-}
-function applyFilter(){
-  document.querySelectorAll(".card").forEach(c=>{ c.style.display=(activeDate==="all"||c.dataset.date===activeDate)?"":"none"; });
-  document.querySelectorAll(".chip").forEach((ch,i)=>{ if(i===0) ch.classList.toggle("active", activeDate==="all"); else { const d=DATES[i-1]; if(d) ch.classList.toggle("active", activeDate===d.d); }});
-}
-
-function loadOrder(){
-  try{ const o=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null"); return Array.isArray(o)?o:null; }catch{return null}
-}
-function saveOrder(){
-  const order=[...document.querySelectorAll(".card")].map(c=>parseInt(c.dataset.index,10));
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(order));
-}
-function restoreOrder(){
-  const order=loadOrder(); if(!order) return;
-  const map=new Map(); document.querySelectorAll(".card").forEach(c=>map.set(parseInt(c.dataset.index,10),c));
-  order.forEach(idx=>{ const el=map.get(idx); if(el) cardsEl.appendChild(el); });
-}
-
-let dragged=null;
-cardsEl.addEventListener("dragstart",e=>{ const card=e.target.closest(".card"); if(!card) return; dragged=card; card.classList.add("dragging"); e.dataTransfer.effectAllowed="move"; });
-cardsEl.addEventListener("dragend",e=>{ if(dragged) dragged.classList.remove("dragging"); document.querySelectorAll(".card").forEach(c=>c.classList.remove("drag-over")); dragged=null; saveOrder(); });
-cardsEl.addEventListener("dragover",e=>{ e.preventDefault(); const card=e.target.closest(".card"); if(!card||card===dragged) return; document.querySelectorAll(".card").forEach(c=>c.classList.remove("drag-over")); card.classList.add("drag-over"); const rect=card.getBoundingClientRect(); const after=(e.clientY-rect.top)>(rect.height/2); if(after) card.after(dragged); else card.before(dragged); });
-cardsEl.addEventListener("drop",e=>{ e.preventDefault(); });
-
-let touchDrag=null, touchTimer=null, startY=0;
-cardsEl.addEventListener("touchstart",e=>{ const card=e.target.closest(".card"); if(!card) return; startY=e.touches[0].clientY; touchTimer=setTimeout(()=>{ touchDrag=card; card.classList.add("dragging"); }, 300); }, {passive:true});
-cardsEl.addEventListener("touchmove",e=>{ if(!touchDrag){ if(Math.abs(e.touches[0].clientY-startY)>10) clearTimeout(touchTimer); return; } e.preventDefault(); const y=e.touches[0].clientY; const over=document.elementFromPoint(e.touches[0].clientX,y); let oc=over?over.closest(".card"):null; if(!oc||oc===touchDrag) return; document.querySelectorAll(".card").forEach(c=>c.classList.remove("drag-over")); oc.classList.add("drag-over"); const rect=oc.getBoundingClientRect(); const after=(y-rect.top)>(rect.height/2); if(after) oc.after(touchDrag); else oc.before(touchDrag); }, {passive:false});
-cardsEl.addEventListener("touchend",()=>{ clearTimeout(touchTimer); if(touchDrag){ touchDrag.classList.remove("dragging"); document.querySelectorAll(".card").forEach(c=>c.classList.remove("drag-over")); saveOrder(); touchDrag=null; }});
-
-const fab=document.getElementById("chatFab"), panel=document.getElementById("chatPanel"), closeChat=document.getElementById("closeChat");
-const passGate=document.getElementById("passGate"), chatBody=document.getElementById("chatBody"), passInput=document.getElementById("passInput"), unlockBtn=document.getElementById("unlockBtn"), passErr=document.getElementById("passErr");
-const chatList=document.getElementById("chatList"), promptInput=document.getElementById("promptInput"), savePrompt=document.getElementById("savePrompt");
-
-function isUnlocked(){ return localStorage.getItem(UNLOCK_KEY)==="1"; }
-function setUnlocked(v){ if(v) localStorage.setItem(UNLOCK_KEY,"1"); else localStorage.removeItem(UNLOCK_KEY); }
-function loadPrompts(){ try{return JSON.parse(localStorage.getItem(PROMPT_KEY)||"[]")}catch{return []} }
-function savePrompts(arr){ localStorage.setItem(PROMPT_KEY, JSON.stringify(arr)); }
-function renderPrompts(){
-  const arr=loadPrompts();
-  chatList.innerHTML = arr.length? "" : '<div style="font-size:12px;color:#8a7d76">No prompts yet. Type above — saved locally only, no action.</div>';
-  arr.slice().reverse().forEach(p=>{
-    const d=document.createElement("div"); d.className="prompt-item";
-    d.innerHTML=`<div class="prompt-meta">${new Date(p.ts).toLocaleString()} • saved — action pending</div><div>${p.text.replace(/</g,"&lt;")}</div>`;
-    chatList.appendChild(d);
+  const c=document.getElementById('vibe-filters');
+  c.innerHTML="";
+  vibes.forEach(v=>{
+    const b=document.createElement('button');
+    b.className='chip'+(activeVibe===v?' active':'');
+    b.textContent=v;
+    b.onclick=()=>{activeVibe=v; renderFilters(); renderBars();};
+    c.appendChild(b);
   });
 }
-function tryUnlock(){
-  const v=passInput.value.trim();
-  if(v==="123456"){ setUnlocked(true); passGate.style.display="none"; chatBody.style.display="flex"; passErr.style.display="none"; renderPrompts(); }
-  else { passErr.style.display="block"; }
+function isWalkIn(b){return /walk-in/i.test(b.reservation_info);}
+function renderBars(){
+  const q=(document.getElementById('bar-search').value||"").toLowerCase();
+  const list=document.getElementById('bars-list');
+  list.innerHTML="";
+  bars.filter(b=>{
+    if(activeVibe!=="All" && !b.vibe_tags.includes(activeVibe)) return false;
+    if(q && !(b.name.toLowerCase().includes(q) || b.why.toLowerCase().includes(q) || b.vibe_tags.join(' ').toLowerCase().includes(q) || b.reservation_info.toLowerCase().includes(q) || b.address.toLowerCase().includes(q))) return false;
+    return true;
+  }).forEach(b=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.style.borderLeftColor=colorFor(b.vibe_tags);
+    const walk=isWalkIn(b);
+    card.innerHTML=`
+      <h3>${b.name} <span class="badge ${walk?'res-walk':'res-need'}">${walk?'✓ Walk-in':'⚑ Reservation'}</span></h3>
+      <div class="meta">${b.address} • ${b.hours} • ${b.price_range}</div>
+      <div class="tags">${b.vibe_tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="why"><b>Why:</b> ${b.why}</div>
+      <div class="meta" style="margin-top:6px"><b>Reserve:</b> ${b.reservation_info}</div>
+      <div class="btns">
+        <a class="btn primary" href="${b.maps_link}" target="_blank">Maps</a>
+        <a class="btn" href="${b.website}" target="_blank">${b.website_label}</a>
+        <a class="btn" href="https://www.google.com/search?q=${encodeURIComponent(b.name+' Madrid google reviews')}" target="_blank">Google Reviews</a>
+      </div>
+    `;
+    list.appendChild(card);
+  });
 }
-unlockBtn.onclick=tryUnlock;
-passInput.addEventListener("keydown",e=>{ if(e.key==="Enter") tryUnlock(); });
-fab.onclick=()=>{ panel.classList.toggle("open"); if(panel.classList.contains("open")){ if(isUnlocked()){ passGate.style.display="none"; chatBody.style.display="flex"; renderPrompts(); } else { passGate.style.display="block"; chatBody.style.display="none"; passInput.focus(); } }};
-closeChat.onclick=()=>panel.classList.remove("open");
-savePrompt.onclick=()=>{
-  const t=promptInput.value.trim(); if(!t) return;
-  const arr=loadPrompts(); arr.push({text:t, ts: Date.now()}); savePrompts(arr); promptInput.value=""; renderPrompts();
-  try {
-    const hatchUrls = [
-      localStorage.getItem('hatch_api_url'),
-      'https://madrid-trip-october-2026-2.hatch.space/actions',
-      window.HATCH_API_URL
-    ].filter(Boolean);
-    const payload = {action:'addPrompt', args:{prompt:t}};
-    hatchUrls.forEach(url => {
-      fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)}).catch(()=>{});
-    });
-    if (window.location.hostname.includes('hatch')) {
-      fetch('./actions', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)}).catch(()=>{});
-    }
-    fetch('https://ntfy.sh/madrid-oct-2026-ali-prompts', {
-      method:'POST',
-      headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({prompt:t, ts:Date.now(), source:'github', page: window.location.href})
-    }).catch(()=>{});
-  } catch(e) {}
-};
-promptInput.addEventListener("keydown",e=>{ if(e.key==="Enter") savePrompt.click(); });
-
-restoreOrder();
-renderFilters();
-applyFilter();
+document.getElementById('bar-search').addEventListener('input', renderBars);
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click', (e)=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  e.target.classList.add('active');
+  const tab=e.target.dataset.tab;
+  document.getElementById('bars-pane').style.display=tab==='bars'?'block':'none';
+  document.getElementById('itinerary-pane').style.display=tab==='itinerary'?'block':'none';
+  document.getElementById('hotel-pane').style.display=tab==='hotel'?'block':'none';
+}));
+renderFilters(); renderBars();
 </script>
 </body>
 </html>
